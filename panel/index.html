@@ -5,59 +5,210 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>پنل مدیریت HOJAT</title>
 <style>
+@font-face{font-family:'Vazirmatn';src:url('fonts/Vazirmatn-Regular.ttf') format('truetype');font-weight:400;font-display:swap}
+@font-face{font-family:'Vazirmatn';src:url('fonts/Vazirmatn-Bold.ttf') format('truetype');font-weight:700;font-display:swap}
+@font-face{font-family:'Vazirmatn';src:url('fonts/Vazirmatn-ExtraBold.ttf') format('truetype');font-weight:800;font-display:swap}
+
 :root{
-  --bg:#f6f5f2; --surface:#fff; --surface2:#efede8; --text:#14120f; --muted:#6b675f;
-  --line:#e3e0d9; --accent:#e8552e; --accent2:#f78c3f; --ok:#0f766e; --err:#ba1a1a;
+  --bg:#0a0e17; --bg2:#0d1220; --surface:#141c2d; --surface2:#1b2438;
+  --text:#f2f0eb; --muted:#a8aebf; --line:#263049;
+  --accent:#e8552e; --accent2:#f78c3f; --ok:#0f9d76; --err:#ef4444;
+  --radius:18px;
 }
 *{box-sizing:border-box;margin:0;padding:0}
-body{font-family:Tahoma,"Segoe UI",sans-serif;background:var(--bg);color:var(--text);line-height:1.7;font-size:14px}
-header{background:linear-gradient(135deg,#0a0e17,#141c2d 55%,#3a1c10);color:#fff;padding:18px 20px;position:sticky;top:0;z-index:10}
-header h1{font-size:18px;letter-spacing:.12em}
-header h1 b{color:var(--accent2)}
-header p{color:#c6ccdc;font-size:12px;margin-top:2px}
-.bar{display:flex;gap:8px;align-items:center;margin-top:10px;flex-wrap:wrap}
-.bar input{background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.25);color:#fff;border-radius:10px;padding:8px 10px;font-family:inherit;font-size:12px}
-.bar input::placeholder{color:#aeb6c8}
-.bar input.repo{width:220px}
+::selection{background:var(--accent);color:#fff}
+::-webkit-scrollbar{width:9px;height:9px}
+::-webkit-scrollbar-track{background:var(--bg2)}
+::-webkit-scrollbar-thumb{background:linear-gradient(var(--accent),var(--accent2));border-radius:99px}
+
+body{
+  font-family:'Vazirmatn',Tahoma,sans-serif;background:var(--bg);color:var(--text);
+  line-height:1.8;font-size:14px;overflow-x:hidden;
+}
+
+/* ---------- animated background glows ---------- */
+.bg-glow{position:fixed;border-radius:50%;filter:blur(90px);opacity:.35;pointer-events:none;z-index:0}
+.glow1{width:420px;height:420px;background:var(--accent);top:-120px;right:-100px;animation:drift1 14s ease-in-out infinite alternate}
+.glow2{width:340px;height:340px;background:#7c3aed;bottom:-100px;left:-80px;animation:drift2 18s ease-in-out infinite alternate}
+@keyframes drift1{from{transform:translate(0,0) scale(1)}to{transform:translate(-60px,50px) scale(1.15)}}
+@keyframes drift2{from{transform:translate(0,0) scale(1.1)}to{transform:translate(70px,-45px) scale(.95)}}
+
+/* ---------- header ---------- */
+header{
+  position:relative;z-index:2;padding:26px 22px 18px;overflow:hidden;
+  background:linear-gradient(135deg,#0a0e17 0%,#141c2d 55%,#3a1c10 100%);
+  border-bottom:1px solid var(--line);
+}
+header::after{content:'';position:absolute;inset:0;pointer-events:none;
+  background:radial-gradient(500px 200px at 85% 0%,rgba(232,85,46,.35),transparent 60%),
+             radial-gradient(400px 160px at 10% 100%,rgba(247,140,63,.2),transparent 60%);
+}
+header>*{position:relative;z-index:1}
+.logo{display:flex;align-items:baseline;gap:2px;animation:popIn .7s cubic-bezier(.34,1.56,.64,1) both}
+.logo h1{font-size:26px;font-weight:800;letter-spacing:.3em;color:#fff}
+.logo h1 b{color:var(--accent)}
+.logo small{color:var(--muted);font-size:12px;margin-right:10px;letter-spacing:0}
+.bar{
+  display:flex;gap:8px;align-items:center;margin-top:16px;flex-wrap:wrap;
+  animation:fadeUp .6s .15s ease both;
+}
+.bar input{
+  background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.16);color:#fff;
+  border-radius:12px;padding:9px 12px;font-family:inherit;font-size:12.5px;
+  transition:border-color .25s, box-shadow .25s, background .25s;
+}
+.bar input::placeholder{color:#7d879e}
+.bar input:focus{outline:none;border-color:var(--accent);box-shadow:0 0 0 3px rgba(232,85,46,.18);background:rgba(255,255,255,.1)}
+.bar input.repo{width:230px}
 .bar input.tok{width:280px}
-button{font-family:inherit;cursor:pointer;border:none;border-radius:999px;padding:9px 16px;font-size:13px;font-weight:700}
-.b-primary{background:var(--accent);color:#fff}
-.b-ghost{background:rgba(255,255,255,.12);color:#fff;border:1px solid rgba(255,255,255,.3)}
+
+/* ---------- buttons ---------- */
+button{
+  font-family:inherit;cursor:pointer;border:none;border-radius:14px;
+  padding:10px 18px;font-size:13px;font-weight:700;color:#fff;
+  position:relative;transition:transform .15s ease, box-shadow .25s, background .25s, opacity .2s;
+}
+button:active{transform:scale(.95)}
+button:disabled{opacity:.5;cursor:wait}
+.b-primary{background:linear-gradient(135deg,var(--accent),var(--accent2));box-shadow:0 4px 16px rgba(232,85,46,.35)}
+.b-primary:hover{box-shadow:0 6px 22px rgba(232,85,46,.55);transform:translateY(-1px)}
+.b-ghost{background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.2);backdrop-filter:blur(6px)}
+.b-ghost:hover{background:rgba(255,255,255,.16);border-color:rgba(255,255,255,.4)}
 .b-soft{background:var(--surface2);color:var(--text);border:1px solid var(--line)}
-.b-danger{background:none;color:var(--err);border:1px solid var(--err);padding:5px 12px;font-size:12px}
-.b-ok{background:var(--ok);color:#fff}
-main{max-width:880px;margin:0 auto;padding:16px}
-section{background:var(--surface);border:1px solid var(--line);border-radius:18px;margin-top:16px;overflow:hidden}
-.sec-head{display:flex;align-items:center;gap:8px;padding:13px 16px;background:var(--surface2);cursor:pointer;user-select:none}
-.sec-head h2{font-size:15px;flex:1}
-.sec-head .count{color:var(--muted);font-size:12px}
-.sec-body{padding:12px 16px;display:none}
-section.open .sec-body{display:block}
-.item{border:1px solid var(--line);border-radius:14px;padding:12px;margin-bottom:10px;background:var(--bg)}
-.item-head{display:flex;align-items:center;gap:8px;margin-bottom:8px}
+.b-soft:hover{border-color:var(--accent);color:var(--accent2)}
+.b-danger{background:none;color:#f87171;border:1px solid rgba(239,68,68,.45);padding:6px 14px;font-size:12px;border-radius:11px}
+.b-danger:hover{background:rgba(239,68,68,.12);border-color:#f87171}
+.b-ok{background:linear-gradient(135deg,var(--ok),#16c79a);box-shadow:0 4px 18px rgba(15,157,118,.4);padding:12px 30px}
+.b-ok:hover{box-shadow:0 6px 26px rgba(15,157,118,.6);transform:translateY(-1px)}
+.b-ok.saving{animation:pulse 1.2s ease-in-out infinite}
+@keyframes pulse{0%,100%{box-shadow:0 0 0 0 rgba(15,157,118,.45)}50%{box-shadow:0 0 0 12px rgba(15,157,118,0)}}
+
+/* ---------- main & sections ---------- */
+main{position:relative;z-index:1;max-width:900px;margin:0 auto;padding:10px 16px 90px}
+.hint{
+  font-size:12px;color:var(--muted);background:var(--surface);border:1px solid var(--line);
+  border-radius:14px;padding:10px 14px;margin-top:14px;display:flex;gap:10px;align-items:center;
+  animation:fadeUp .6s .25s ease both;
+}
+.hint .dot{width:8px;height:8px;border-radius:50%;background:var(--accent2);flex:none;animation:blink 2s infinite}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:.3}}
+
+section{
+  background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);
+  margin-top:16px;overflow:hidden;
+  transition:border-color .3s, box-shadow .3s, transform .3s;
+  animation:fadeUp .55s ease both;
+}
+section:hover{border-color:#34405c}
+section.open{box-shadow:0 8px 30px rgba(0,0,0,.35)}
+.sec-head{display:flex;align-items:center;gap:10px;padding:14px 18px;background:var(--surface2);cursor:pointer;user-select:none}
+.sec-head:hover{background:#20293f}
+.sec-head .emoji{font-size:18px;transition:transform .3s cubic-bezier(.34,1.56,.64,1)}
+section.open .sec-head .emoji{transform:scale(1.15) rotate(-6deg)}
+.sec-head h2{font-size:15px;font-weight:700;flex:1}
+.sec-head .count{
+  color:var(--muted);font-size:11.5px;background:var(--bg);border:1px solid var(--line);
+  border-radius:99px;padding:2px 10px;transition:color .3s,border-color .3s;
+}
+section.open .sec-head .count{color:var(--accent2);border-color:rgba(232,85,46,.4)}
+.sec-head .chev{transition:transform .35s cubic-bezier(.34,1.56,.64,1);color:var(--muted);font-size:12px}
+section.open .sec-head .chev{transform:rotate(180deg);color:var(--accent2)}
+
+.sec-body{display:grid;grid-template-rows:0fr;transition:grid-template-rows .4s cubic-bezier(.4,0,.2,1)}
+section.open .sec-body{grid-template-rows:1fr}
+.sec-body-in{overflow:hidden;padding:0 16px}
+section.open .sec-body-in{padding:12px 16px}
+/* smooth padding transition */
+.sec-body-in{transition:padding .4s}
+
+/* ---------- items ---------- */
+.item{
+  border:1px solid var(--line);border-radius:14px;padding:13px;margin-bottom:10px;
+  background:var(--bg2);
+  transition:border-color .25s, box-shadow .25s, transform .25s;
+  animation:fadeUp .45s ease both;
+}
+.item:hover{border-color:#3a4665;box-shadow:0 4px 18px rgba(0,0,0,.3);transform:translateY(-2px)}
+.item-head{display:flex;align-items:center;gap:8px;margin-bottom:9px}
 .item-head b{flex:1;font-size:14px}
-.row{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:7px}
-.field{flex:1;min-width:170px}
-.field label{display:block;font-size:11px;color:var(--muted);margin-bottom:3px}
-.field input,.field textarea,.field select{width:100%;border:1px solid var(--line);border-radius:10px;padding:8px 10px;font-family:inherit;font-size:13px;background:var(--surface);color:var(--text)}
+.item-head b::before{content:'●';color:var(--accent);font-size:9px;margin-left:8px}
+
+.row{display:flex;gap:9px;flex-wrap:wrap;margin-bottom:8px}
+.field{flex:1;min-width:180px;animation:inherit}
+.field label{display:block;font-size:11px;color:var(--muted);margin-bottom:4px;transition:color .25s}
+.field:focus-within label{color:var(--accent2)}
+.field input,.field textarea,.field select{
+  width:100%;border:1px solid var(--line);border-radius:11px;padding:8px 11px;
+  font-family:inherit;font-size:13px;background:var(--surface);color:var(--text);
+  transition:border-color .25s, box-shadow .25s;
+}
+.field select{cursor:pointer}
+.field select option{background:var(--surface)}
 .field textarea{min-height:64px;resize:vertical}
-.field input:focus,.field textarea:focus{outline:2px solid var(--accent2);border-color:var(--accent2)}
-.toolbar{display:flex;gap:8px;margin-top:10px;flex-wrap:wrap}
-.toast{position:fixed;bottom:20px;left:50%;transform:translateX(-50%);background:#14120f;color:#fff;padding:11px 18px;border-radius:99px;font-size:13px;display:none;white-space:nowrap;z-index:99}
-.toast.ok{background:var(--ok)} .toast.err{background:var(--err)}
-.save-bar{position:fixed;bottom:0;left:0;right:0;background:color-mix(in srgb,#fff 94%,transparent);backdrop-filter:blur(10px);border-top:1px solid var(--line);padding:10px 16px;display:flex;gap:10px;justify-content:center;z-index:20}
-.save-bar .status{align-self:center;font-size:12px;color:var(--muted)}
-footer{text-align:center;color:var(--muted);font-size:11px;padding:20px 0 70px}
-.hint{font-size:11.5px;color:var(--muted);background:var(--surface2);border-radius:10px;padding:8px 12px;margin-bottom:10px}
+.field input:focus,.field textarea:focus,.field select:focus{
+  outline:none;border-color:var(--accent);box-shadow:0 0 0 3px rgba(232,85,46,.15);
+}
+.toolbar{display:flex;gap:8px;margin-top:12px;flex-wrap:wrap}
+
+/* ---------- save bar ---------- */
+.save-bar{
+  position:fixed;bottom:0;left:0;right:0;z-index:20;
+  background:rgba(13,18,32,.85);backdrop-filter:blur(14px);
+  border-top:1px solid var(--line);padding:11px 16px;
+  display:flex;gap:12px;justify-content:center;align-items:center;
+}
+.save-bar .status{font-size:12px;color:var(--muted);transition:color .3s}
+.save-bar .status.ok{color:var(--ok)} .save-bar .status.err{color:#f87171}
+
+/* ---------- toast ---------- */
+.toast{
+  position:fixed;bottom:74px;left:50%;z-index:99;transform:translate(-50%,20px);
+  background:var(--surface2);border:1px solid var(--line);color:var(--text);
+  padding:11px 20px;border-radius:14px;font-size:13px;display:none;
+  box-shadow:0 10px 30px rgba(0,0,0,.5);white-space:nowrap;
+  animation:toastIn .35s cubic-bezier(.34,1.56,.64,1) both;
+}
+.toast.ok{border-color:rgba(15,157,118,.5)} .toast.err{border-color:rgba(239,68,68,.5)}
+
+/* ---------- skeleton ---------- */
+#skeleton{position:fixed;inset:0;z-index:50;background:rgba(10,14,23,.92);backdrop-filter:blur(6px);display:none;align-items:center;justify-content:center;flex-direction:column;gap:18px}
+#skeleton.show{display:flex}
+.spinner{width:46px;height:46px;border-radius:50%;border:3px solid var(--line);border-top-color:var(--accent);animation:spin .8s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+#skeleton p{color:var(--muted);font-size:13px;animation:blink 1.6s infinite}
+
+/* ---------- empty state ---------- */
+#empty{
+  display:none;text-align:center;padding:46px 20px;border:1.5px dashed var(--line);
+  border-radius:var(--radius);margin-top:16px;animation:fadeUp .5s ease both;
+}
+#empty.show{display:block}
+#empty .big{font-size:42px;margin-bottom:10px;animation:floaty 3s ease-in-out infinite}
+@keyframes floaty{0%,100%{transform:translateY(0)}50%{transform:translateY(-8px)}}
+#empty p{color:var(--muted);font-size:13px}
+
+footer{text-align:center;color:var(--muted);font-size:11px;padding:24px 0 80px;position:relative;z-index:1}
+
+/* ---------- keyframes ---------- */
+@keyframes fadeUp{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:none}}
+@keyframes popIn{from{opacity:0;transform:scale(.7)}to{opacity:1;transform:scale(1)}}
+@keyframes toastIn{from{opacity:0;transform:translate(-50%,20px) scale(.9)}to{opacity:1;transform:translate(-50%,0) scale(1)}}
+
+@media(max-width:640px){
+  .bar input.repo,.bar input.tok{width:100%}
+  .field{min-width:100%}
+}
 </style>
 </head>
 <body>
 
+<div class="bg-glow glow1"></div>
+<div class="bg-glow glow2"></div>
+
 <header>
-  <h1>پنل مدیریت <b>HOJAT</b></h1>
-  <p>محتوای اپ رزومه — تغییرات با دکمه «ذخیره در گیت‌هاب» روی اپ اعمال می‌شود</p>
+  <div class="logo"><h1>HOJAT<b>.</b></h1><small>پنل مدیریت محتوا</small></div>
   <div class="bar">
-    <input id="repo" class="repo" placeholder="مثل: hojat-app-content">
+    <input id="repo" class="repo" placeholder="ریپو: AmirAslami/hojat-content">
     <input id="tok" class="tok" type="password" placeholder="توکن گیت‌هاب (ghp_...)">
     <button class="b-ghost" onclick="loadFromGithub()">⬇️ بارگذاری</button>
     <button class="b-ghost" onclick="document.getElementById('fileInput').click()">📁 از فایل</button>
@@ -67,68 +218,70 @@ footer{text-align:center;color:var(--muted);font-size:11px;padding:20px 0 70px}
 </header>
 
 <main>
-  <div class="hint">
-    راهنمای سریع: ۱) نام ریپو و توکن را وارد کن ۲) «بارگذاری» ۳) تغییرات را انجام بده ۴) «ذخیره در گیت‌هاب».
-    تنظیمات و توکن در همین مرورگر ذخیره می‌شوند. لینک ویدیوها را از یوتیوب/اینستاگرام کپی کن.
+  <div class="hint"><span class="dot"></span>
+    تغییر کن، «ذخیره در گیت‌هاب» بزن — اپ حداکثر تا ۳۰ ثانیه بعد خودش به‌روز می‌شود. تنظیمات در همین مرورگر ذخیره می‌مانند.
+  </div>
+
+  <div id="empty">
+    <div class="big">🎬</div>
+    <p>هنوز محتوایی بارگذاری نشده — نام ریپو و توکن را وارد کن و «بارگذاری» بزن.</p>
   </div>
 
   <section id="sec-works" class="open">
-    <div class="sec-head" onclick="toggleSec('sec-works')"><h2>🎬 نمونه‌کارها</h2><span class="count" id="worksCount"></span></div>
-    <div class="sec-body"><div id="works"></div>
+    <div class="sec-head" onclick="toggleSec('sec-works')"><span class="emoji">🎬</span><h2>نمونه‌کارها</h2><span class="count" id="worksCount"></span><span class="chev">▼</span></div>
+    <div class="sec-body"><div class="sec-body-in"><div id="works"></div>
       <div class="toolbar"><button class="b-primary" onclick="addWork()">+ افزودن نمونه‌کار</button></div>
-    </div>
+    </div></div>
   </section>
 
   <section id="sec-skills">
-    <div class="sec-head" onclick="toggleSec('sec-skills')"><h2>📊 مهارت‌ها</h2><span class="count" id="skillsCount"></span></div>
-    <div class="sec-body"><div id="skills"></div>
+    <div class="sec-head" onclick="toggleSec('sec-skills')"><span class="emoji">📊</span><h2>مهارت‌ها</h2><span class="count" id="skillsCount"></span><span class="chev">▼</span></div>
+    <div class="sec-body"><div class="sec-body-in"><div id="skills"></div>
       <div class="toolbar"><button class="b-primary" onclick="addSkill()">+ افزودن مهارت</button></div>
-    </div>
+    </div></div>
   </section>
 
   <section id="sec-collabs">
-    <div class="sec-head" onclick="toggleSec('sec-collabs')"><h2>🤝 همکاری‌ها</h2><span class="count" id="collabsCount"></span></div>
-    <div class="sec-body"><div id="collabs"></div>
+    <div class="sec-head" onclick="toggleSec('sec-collabs')"><span class="emoji">🤝</span><h2>همکاری‌ها</h2><span class="count" id="collabsCount"></span><span class="chev">▼</span></div>
+    <div class="sec-body"><div class="sec-body-in"><div id="collabs"></div>
       <div class="toolbar"><button class="b-primary" onclick="addCollab()">+ افزودن همکاری</button></div>
-    </div>
+    </div></div>
   </section>
 
   <section id="sec-services">
-    <div class="sec-head" onclick="toggleSec('sec-services')"><h2>🛠 خدمات</h2><span class="count" id="servicesCount"></span></div>
-    <div class="sec-body"><div id="services"></div>
+    <div class="sec-head" onclick="toggleSec('sec-services')"><span class="emoji">🛠</span><h2>خدمات</h2><span class="count" id="servicesCount"></span><span class="chev">▼</span></div>
+    <div class="sec-body"><div class="sec-body-in"><div id="services"></div>
       <div class="toolbar"><button class="b-primary" onclick="addService()">+ افزودن خدمت</button></div>
-    </div>
+    </div></div>
   </section>
 
   <section id="sec-contacts">
-    <div class="sec-head" onclick="toggleSec('sec-contacts')"><h2>📮 راه‌های ارتباط</h2><span class="count" id="contactsCount"></span></div>
-    <div class="sec-body"><div id="contacts"></div>
+    <div class="sec-head" onclick="toggleSec('sec-contacts')"><span class="emoji">📮</span><h2>راه‌های ارتباط</h2><span class="count" id="contactsCount"></span><span class="chev">▼</span></div>
+    <div class="sec-body"><div class="sec-body-in"><div id="contacts"></div>
       <div class="toolbar"><button class="b-primary" onclick="addContact()">+ افزودن راه ارتباطی</button></div>
-    </div>
+    </div></div>
   </section>
 
-  <footer>پنل HOJAT • محتوا در ریپوی گیت‌هاب ذخیره می‌شود • اپ هنگام باز شدن خودکار به‌روزرسانی می‌شود</footer>
+  <footer>پنل HOJAT • ذخیره در گیت‌هاب • اپ هر ۳۰ ثانیه خودش را به‌روز می‌کند</footer>
 </main>
 
 <div class="save-bar">
   <span class="status" id="status"></span>
-  <button class="b-ok" style="padding:11px 26px" onclick="saveToGithub()">💾 ذخیره در گیت‌هاب</button>
+  <button class="b-ok" id="saveBtn" onclick="saveToGithub()">💾 ذخیره در گیت‌هاب</button>
 </div>
 <div class="toast" id="toast"></div>
+<div id="skeleton"><div class="spinner"></div><p>در حال ارتباط با گیت‌هاب…</p></div>
 
 <script>
 'use strict';
-// ---------- icons & categories (must match the app's icon map) ----------
 const ICONS = ['psychology','inventory_2','play_circle','fitness_center','mic','auto_awesome','movie','videocam','edit_note'];
 const ICON_LABELS = {psychology:'ذهن/روان‌شناسی', inventory_2:'محصول', play_circle:'پخش', fitness_center:'تناسب اندام', mic:'میکروفون', auto_awesome:'موشن/جرقه', movie:'فیلم', videocam:'دوربین', edit_note:'نوشتن'};
 const CATS = ['Instagram','YouTube','Ads'];
 const CONTACT_TYPES = ['telegram','instagram','email'];
 
-let data = null;          // parsed content.json
-let fileSha = null;       // GitHub blob sha for committing
+let data = null, fileSha = null;
 let owner = '', repo = '', branch = 'main', path = 'content.json';
 
-// ---------- helpers ----------
 const $ = id => document.getElementById(id);
 function el(tag, attrs = {}, children = []) {
   const node = document.createElement(tag);
@@ -150,9 +303,7 @@ function field(labelText, value, oninput, tag = 'input', options) {
       const opt = el('option', {value: o.v}, [document.createTextNode(o.t)]);
       input.appendChild(opt);
     }
-  } else {
-    input = document.createElement(tag);
-  }
+  } else input = document.createElement(tag);
   input.value = value ?? '';
   input.oninput = oninput;
   wrap.appendChild(input);
@@ -166,9 +317,10 @@ function trField(labelText, obj, key) {
 }
 function toast(msg, kind = '') {
   const t = $('toast'); t.textContent = msg; t.className = 'toast ' + kind; t.style.display = 'block';
-  clearTimeout(t._h); t._h = setTimeout(() => t.style.display = 'none', 2600);
+  clearTimeout(t._h); t._h = setTimeout(() => t.style.display = 'none', 2800);
 }
 function toggleSec(id) { $(id).classList.toggle('open'); }
+function setStatus(s, kind = '') { const el2 = $('status'); el2.textContent = s; el2.className = 'status ' + kind; }
 function refreshCounts() {
   $('worksCount').textContent = data?.works?.length + ' مورد';
   $('skillsCount').textContent = data?.skills?.length + ' مورد';
@@ -176,27 +328,31 @@ function refreshCounts() {
   $('servicesCount').textContent = data?.services?.length + ' مورد';
   $('contactsCount').textContent = data?.contacts?.length + ' مورد';
 }
-function setStatus(s) { $('status').textContent = s; }
+// staggered entrance for item cards
+function stagger(container) {
+  [...container.querySelectorAll('.item')].forEach((n, i) => {
+    n.style.animationDelay = (i * 45) + 'ms';
+  });
+}
 
-// ---------- load / persist settings ----------
 function loadSettings() {
-  owner = localStorage.getItem('hojat-owner') || '';
-  repo = localStorage.getItem('hojat-repo') || '';
+  owner = localStorage.getItem('hojat-owner') || 'AmirAslami';
+  repo = localStorage.getItem('hojat-repo') || 'hojat-content';
   branch = localStorage.getItem('hojat-branch') || 'main';
   path = localStorage.getItem('hojat-path') || 'content.json';
   $('tok').value = localStorage.getItem('hojat-token') || '';
-  setStatus(owner ? `${owner}/${repo} • ${branch}:${path}` : 'ریپو تنظیم نشده');
+  $('repo').value = owner + '/' + repo;
+  setStatus(owner ? `${owner}/${repo} • ${branch}:${path}` : '');
 }
 function saveSettings() {
-  const r = $('repo').value.trim();
-  const m = r.split('/');
-  if (m.length === 2) { owner = m[0]; repo = m[1]; } else { repo = r; }
+  const r = $('repo').value.trim(); const m = r.split('/');
+  if (m.length === 2) { owner = m[0]; repo = m[1]; } else repo = r;
   localStorage.setItem('hojat-owner', owner);
   localStorage.setItem('hojat-repo', repo);
   localStorage.setItem('hojat-token', $('tok').value.trim());
 }
+function skeleton(show) { $('skeleton').classList.toggle('show', show); }
 
-// ---------- GitHub API ----------
 function apiHeaders() {
   const tok = $('tok').value.trim();
   if (!tok) { toast('اول توکن گیت‌هاب را وارد کن', 'err'); throw new Error('no token'); }
@@ -212,30 +368,33 @@ async function ghFetch(url, options) {
 }
 async function loadFromGithub() {
   saveSettings();
-  if (!owner || !repo) { toast('نام ریپو را وارد کن (مثل: username/repo)', 'err'); return; }
+  if (!owner || !repo) { toast('نام ریپو را وارد کن', 'err'); return; }
+  skeleton(true);
   try {
-    setStatus('در حال بارگذاری…');
     const res = await ghFetch(`https://api.github.com/repos/${owner}/${repo}/contents/${path}?ref=${branch}`, { headers: apiHeaders() });
     const json = await res.json();
     fileSha = json.sha;
     data = JSON.parse(atob(json.content.replace(/\n/g, '')));
+    $('empty').classList.remove('show');
     renderAll();
-    setStatus(`بارگذاری شد • آخرین تغییر: ${new Date().toLocaleString('fa-IR')}`);
+    setStatus(`بارگذاری شد • ${new Date().toLocaleTimeString('fa-IR')}`, 'ok');
     toast('محتوا از گیت‌هاب بارگذاری شد ✓', 'ok');
   } catch (e) {
-    setStatus('');
+    setStatus('', '');
+    $('empty').classList.add('show');
     toast('خطا در بارگذاری: ' + e.message, 'err');
-  }
+  } finally { skeleton(false); }
 }
 async function saveToGithub() {
   if (!data) { toast('اول محتوا را بارگذاری کن', 'err'); return; }
   saveSettings();
   if (!owner || !repo) { toast('نام ریپو را وارد کن', 'err'); return; }
   let text;
-  try { text = JSON.stringify(data, null, 2) + '\n'; } catch (e) { toast('خطا در ساخت JSON', 'err'); return; }
+  try { text = JSON.stringify(data, null, 2) + '\n'; } catch { toast('خطا در ساخت JSON', 'err'); return; }
+  const btn = $('saveBtn');
+  btn.disabled = true; btn.classList.add('saving'); btn.textContent = '⏳ در حال ذخیره…';
+  skeleton(true);
   try {
-    setStatus('در حال ذخیره…');
-    // fresh sha (it may have changed elsewhere)
     const meta = await ghFetch(`https://api.github.com/repos/${owner}/${repo}/contents/${path}?ref=${branch}`, { headers: apiHeaders() });
     const sha = (await meta.json()).sha;
     await ghFetch(`https://api.github.com/repos/${owner}/${repo}/contents/${path}`, {
@@ -244,24 +403,26 @@ async function saveToGithub() {
       body: JSON.stringify({
         message: 'آپدیت محتوا از پنل — ' + new Date().toLocaleString('fa-IR'),
         content: btoa(unescape(encodeURIComponent(text))),
-        sha,
-        branch,
+        sha, branch,
       }),
     });
     fileSha = sha;
-    setStatus('ذخیره شد ✓ ' + new Date().toLocaleTimeString('fa-IR'));
-    toast('ذخیره شد! اپ با باز شدن بعدی، محتوای جدید را می‌گیرد ✓', 'ok');
+    setStatus('ذخیره شد ✓ ' + new Date().toLocaleTimeString('fa-IR'), 'ok');
+    toast('ذخیره شد! اپ حداکثر تا ۳۰ ثانیه بعد به‌روز می‌شود ✓', 'ok');
   } catch (e) {
-    setStatus('');
+    setStatus('', '');
     toast('خطا در ذخیره: ' + e.message, 'err');
+  } finally {
+    skeleton(false); btn.disabled = false; btn.classList.remove('saving');
+    btn.textContent = '💾 ذخیره در گیت‌هاب';
   }
 }
 function loadFromFile(input) {
   const f = input.files[0]; if (!f) return;
   const reader = new FileReader();
   reader.onload = () => {
-    try { data = JSON.parse(reader.result); fileSha = null; renderAll(); toast('فایل بارگذاری شد ✓', 'ok'); }
-    catch (e) { toast('فایل JSON معتبر نیست', 'err'); }
+    try { data = JSON.parse(reader.result); fileSha = null; $('empty').classList.remove('show'); renderAll(); toast('فایل بارگذاری شد ✓', 'ok'); }
+    catch { toast('فایل JSON معتبر نیست', 'err'); }
   };
   reader.readAsText(f);
 }
@@ -272,10 +433,10 @@ function downloadFile() {
   a.href = URL.createObjectURL(blob); a.download = 'content.json'; a.click();
 }
 
-// ---------- renderers ----------
 function renderAll() {
   renderWorks(); renderSkills(); renderCollabs(); renderServices(); renderContacts();
   refreshCounts();
+  stagger($('works')); stagger($('skills')); stagger($('collabs')); stagger($('services')); stagger($('contacts'));
 }
 
 function renderWorks() {
@@ -291,21 +452,20 @@ function renderWorks() {
     item.appendChild(trField('توضیح کامل صفحه جزئیات', w, 'detail'));
     item.appendChild(trField('نقش', w, 'role'));
     const r2 = el('div', {class:'row'});
-    r2.appendChild(field('لینک ویدیو (یوتیوب/اینستا — خالی = بدون ویدیو)', w.url || '', e => w.url = e.target.value || null));
+    r2.appendChild(field('لینک ویدیو (یوتیوب/اینستا)', w.url || '', e => w.url = e.target.value || null));
     r2.appendChild(field('مدت (مثل 0:40)', w.duration, e => w.duration = e.target.value));
     const r3 = el('div', {class:'row'});
     r3.appendChild(field('دسته', w.category, e => w.category = e.target.value, 'select', () => CATS.map(c => ({v:c, t:c}))));
     r3.appendChild(field('آیکون', w.icon, e => w.icon = e.target.value, 'select', () => ICONS.map(ic => ({v:ic, t:ICON_LABELS[ic]}))));
-    r3.appendChild(field('ابزارها (با کاما جدا کن)', (w.tools || []).join(', '), e => w.tools = e.target.value.split(',').map(s => s.trim()).filter(Boolean)));
+    r3.appendChild(field('ابزارها (با کاما)', (w.tools || []).join(', '), e => w.tools = e.target.value.split(',').map(s => s.trim()).filter(Boolean)));
     item.appendChild(r2); item.appendChild(r3);
     const r4 = el('div', {class:'row'});
-    r4.appendChild(field('رنگ شروع گرادینت (مثل #e8552e)', w.gradient?.[0], e => { w.gradient = w.gradient || []; w.gradient[0] = e.target.value; }, 'input'));
-    r4.appendChild(field('رنگ پایان گرادینت', w.gradient?.[1], e => { w.gradient = w.gradient || []; w.gradient[1] = e.target.value; }, 'input'));
+    r4.appendChild(field('رنگ شروع گرادینت', w.gradient?.[0], e => { w.gradient = w.gradient || []; w.gradient[0] = e.target.value; }));
+    r4.appendChild(field('رنگ پایان گرادینت', w.gradient?.[1], e => { w.gradient = w.gradient || []; w.gradient[1] = e.target.value; }));
     item.appendChild(r4);
     box.appendChild(item);
   });
 }
-
 function renderSkills() {
   const box = $('skills'); box.innerHTML = '';
   data.skills.forEach((s, i) => {
@@ -319,7 +479,6 @@ function renderSkills() {
     box.appendChild(item);
   });
 }
-
 function renderCollabs() {
   const box = $('collabs'); box.innerHTML = '';
   data.collabs.forEach((c, i) => {
@@ -334,7 +493,6 @@ function renderCollabs() {
     box.appendChild(item);
   });
 }
-
 function renderServices() {
   const box = $('services'); box.innerHTML = '';
   data.services.forEach((s, i) => {
@@ -349,7 +507,6 @@ function renderServices() {
     box.appendChild(item);
   });
 }
-
 function renderContacts() {
   const box = $('contacts'); box.innerHTML = '';
   data.contacts.forEach((c, i) => {
@@ -361,14 +518,13 @@ function renderContacts() {
     const r = el('div', {class:'row'});
     r.appendChild(field('نوع', c.type, e => c.type = e.target.value, 'select', () => CONTACT_TYPES.map(t => ({v:t, t:t}))));
     r.appendChild(field('برچسب', c.label, e => c.label = e.target.value));
-    r.appendChild(field('مقدار (مثل @hojat_...)', c.value, e => c.value = e.target.value));
+    r.appendChild(field('مقدار', c.value, e => c.value = e.target.value));
     item.appendChild(r);
     item.appendChild(field('لینک کامل (اختیاری)', c.url, e => c.url = e.target.value));
     box.appendChild(item);
   });
 }
 
-// ---------- creators ----------
 function blankTr(fa = '', en = '') { return {fa, en}; }
 function addWork() {
   data.works.push({
@@ -379,8 +535,7 @@ function addWork() {
     detail: blankTr('توضیح کامل…', 'Full description…'),
     tools: ['Premiere Pro'],
     role: blankTr('تدوینگر', 'Editor'),
-    url: null,
-    icon: 'play_circle',
+    url: null, icon: 'play_circle',
     gradient: ['#e8552e', '#7a2d8f'],
     duration: '0:30',
   });
@@ -391,10 +546,11 @@ function addCollab() { data.collabs.push({name: blankTr('همکاری جدید',
 function addService() { data.services.push({title: blankTr('خدمت جدید', 'New service'), desc: blankTr('توضیح…', 'Description…'), icon: 'movie'}); renderAll(); $('sec-services').classList.add('open'); }
 function addContact() { data.contacts.push({type: 'telegram', label: 'Telegram', value: '@', url: ''}); renderAll(); $('sec-contacts').classList.add('open'); }
 
-// ---------- boot ----------
 loadSettings();
 $('repo').addEventListener('change', saveSettings);
 $('tok').addEventListener('change', saveSettings);
+// auto-load if token was saved before
+if (localStorage.getItem('hojat-token')) loadFromGithub();
 </script>
 </body>
 </html>
