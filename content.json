@@ -1,6 +1,219 @@
 {
   "works": [
     {
+      "id": "reel-psychology",
+      "title": {
+        "fa": "ریلز داستانی — صفحه روان‌شناسی",
+        "en": "Narrative Reel — Psychology page"
+      },
+      "category": "Instagram",
+      "desc": {
+        "fa": "۴۰ ثانیه • قلاب، کنجکاوی، نتیجه",
+        "en": "40s • hook, curiosity, payoff"
+      },
+      "detail": {
+        "fa": "یک روایت ۴۰ ثانیه‌ای با قلاب قوی در ثانیه‌های اول، ریتم کنجکاوی‌ساز و پایان‌بندی مشخص. مناسب صفحاتی که می‌خواهند مخاطب تا انتها بماند.",
+        "en": "A 40-second narrative with a strong hook in the first seconds, curiosity-driven rhythm and a clear ending — built for pages that want viewers to stay till the end."
+      },
+      "tools": [
+        "Premiere Pro"
+      ],
+      "role": {
+        "fa": "تدوین و روایت",
+        "en": "Editing & narrative"
+      },
+      "url": null,
+      "icon": "psychology",
+      "gradient": [
+        "#e8552e",
+        "#7a2d8f"
+      ],
+      "duration": "0:40"
+    },
+    {
+      "id": "product-intro",
+      "title": {
+        "fa": "معرفی محصول — تبلیغاتی",
+        "en": "Product intro — Advertising"
+      },
+      "category": "Ads",
+      "desc": {
+        "fa": "ریتم تند، موشن هدفمند",
+        "en": "Fast rhythm, purposeful motion"
+      },
+      "detail": {
+        "fa": "آگهی کوتاه معرفی محصول با ریتم تند و موشن‌گرافیک هدفمند؛ هر فریم در خدمت پیام برند است، نه نمایش افکت.",
+        "en": "A short product ad with fast rhythm and purposeful motion graphics; every frame serves the brand message, not the effects."
+      },
+      "tools": [
+        "Premiere Pro",
+        "After Effects"
+      ],
+      "role": {
+        "fa": "تدوین و موشن‌گرافیک",
+        "en": "Editing & motion graphics"
+      },
+      "url": null,
+      "icon": "inventory_2",
+      "gradient": [
+        "#0a0e17",
+        "#2b5cff"
+      ],
+      "duration": "0:30"
+    },
+    {
+      "id": "youtube-narrative",
+      "title": {
+        "fa": "ویدئوی یوتیوب — روایی",
+        "en": "YouTube video — Narrative"
+      },
+      "category": "YouTube",
+      "desc": {
+        "fa": "ساختار داستانی و پایان مشخص",
+        "en": "Story structure and clear ending"
+      },
+      "detail": {
+        "fa": "ویدئوی بلند روایی با ساختار سه‌پرده‌ای: قلاب، توسعه، نتیجه. نگه‌داشتن مخاطب در مدت طولانی با ریتم درست و حذف اضافات.",
+        "en": "A long-form narrative video with a three-act structure: hook, development, payoff. Keeping viewers engaged with the right rhythm and tight cuts."
+      },
+      "tools": [
+        "Premiere Pro"
+      ],
+      "role": {
+        "fa": "تدوین",
+        "en": "Editing"
+      },
+      "url": null,
+      "icon": "play_circle",
+      "gradient": [
+        "#0f766e",
+        "#0a0e17"
+      ],
+      "duration": "8:20"
+    },
+    {
+      "id": "fitness-reel",
+      "title": {
+        "fa": "ریلز تناسب اندام",
+        "en": "Fitness Reel"
+      },
+      "category": "Instagram",
+      "desc": {
+        "fa": "کات‌های پرانرژی، موسیقی هماهنگ",
+        "en": "Energetic cuts, synced music"
+      },
+      "detail": {
+        "fa": "کات‌های پرانرژی کاملاً سینک با ضرب موسیقی؛ انرژی حرکت ورزشکار با ریتم تدوین یکی می‌شود.",
+        "en": "Energetic cuts perfectly synced to the beat; the athlete's movement energy and the edit rhythm become one."
+      },
+      "tools": [
+        "Premiere Pro"
+      ],
+      "role": {
+        "fa": "تدوین",
+        "en": "Editing"
+      },
+      "url": null,
+      "icon": "fitness_center",
+      "gradient": [
+        "#b45309",
+        "#e8552e"
+      ],
+      "duration": "0:35"
+    },
+    {
+      "id": "podcast-visual",
+      "title": {
+        "fa": "پادکست — تدوین تصویری",
+        "en": "Podcast — Visual edit"
+      },
+      "category": "YouTube",
+      "desc": {
+        "fa": "تدوین چنددوربینه و زیرنویس",
+        "en": "Multi-cam edit and captions"
+      },
+      "detail": {
+        "fa": "تدوین چنددوربینه پادکست با تعویض زاویه در لحظه‌های درست گفتگو، زیرنویس‌گذاری تمیز و استایل تصویری ثابت.",
+        "en": "Multi-cam podcast editing switching angles at the right conversational moments, clean captions and a consistent visual style."
+      },
+      "tools": [
+        "Premiere Pro"
+      ],
+      "role": {
+        "fa": "تدوین و زیرنویس",
+        "en": "Editing & captions"
+      },
+      "url": null,
+      "icon": "mic",
+      "gradient": [
+        "#334155",
+        "#e8552e"
+      ],
+      "duration": "24:00"
+    },
+    {
+      "id": "brand-motion",
+      "title": {
+        "fa": "موشن‌گرافیک — معرفی برند",
+        "en": "Motion graphics — Brand intro"
+      },
+      "category": "Ads",
+      "desc": {
+        "fa": "انیمیشن لوگو و تایپوگرافی",
+        "en": "Logo animation and typography"
+      },
+      "detail": {
+        "fa": "انیمیشن لوگو و تایپوگرافی متحرک برای معرفی برند؛ ۲۰ ثانیه‌ای که هویت بصری برند را در ذهن مخاطب جا می‌اندازد.",
+        "en": "Logo animation and kinetic typography for brand intros — 20 seconds that imprint the brand's visual identity."
+      },
+      "tools": [
+        "After Effects"
+      ],
+      "role": {
+        "fa": "موشن‌گرافیک",
+        "en": "Motion graphics"
+      },
+      "url": null,
+      "icon": "auto_awesome",
+      "gradient": [
+        "#7c3aed",
+        "#0a0e17"
+      ],
+      "duration": "0:20"
+    },
+    {
+      "id": "work-1795038449589",
+      "title": {
+        "fa": "ÙÙÙÙÙâÚ©Ø§Ø± Ø¬Ø¯ÛØ¯",
+        "en": "New work"
+      },
+      "category": "Instagram",
+      "desc": {
+        "fa": "ØªÙØ¶ÛØ­ Ú©ÙØªØ§Ùâ¦",
+        "en": "Short descriptionâ¦"
+      },
+      "detail": {
+        "fa": "ØªÙØ¶ÛØ­ Ú©Ø§ÙÙâ¦",
+        "en": "Full descriptionâ¦"
+      },
+      "tools": [
+        "Premiere Pro"
+      ],
+      "role": {
+        "fa": "ØªØ¯ÙÛÙÚ¯Ø±",
+        "en": "Editor"
+      },
+      "url": null,
+      "thumbUrl": "https://amiraslami.github.io/hojat-content/media/work-1795038449589/thumb.jpg",
+      "videoUrl": "https://amiraslami.github.io/hojat-content/media/work-1795038449589/video.mp4",
+      "icon": "play_circle",
+      "gradient": [
+        "#e8552e",
+        "#7a2d8f"
+      ],
+      "duration": "0:30"
+    },
+    {
       "id": "work-1795042496729",
       "title": {
         "fa": "نمونه‌کار جدید",
@@ -80,8 +293,8 @@
   "collabs": [
     {
       "name": {
-        "fa": "آروین ویرا",
-        "en": "Arvin vira"
+        "fa": "Arvin Veera",
+        "en": "Arvin Veera"
       },
       "desc": {
         "fa": "همکاری حضوری",
@@ -91,8 +304,8 @@
     },
     {
       "name": {
-        "fa": "Mister Crab",
-        "en": "Mister Crab"
+        "fa": "MasterCrab",
+        "en": "MasterCrab"
       },
       "desc": {
         "fa": "تدوین و تولید محتوا",
@@ -212,12 +425,6 @@
       "label": "Email",
       "value": "hojat.ramezani@gmail.com",
       "url": "mailto:hojat.ramezani@gmail.com"
-    },
-    {
-      "type": "phone",
-      "label": "شماره تماس",
-      "value": "09308981437",
-      "url": "tel:09308981437"
     }
   ],
   "texts": {
