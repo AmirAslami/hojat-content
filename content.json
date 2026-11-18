@@ -1,170 +1,348 @@
 {
-  "_note": "محتوا از کد جدا شده — حجت می‌تواند مقادیر را همین‌جا عوض کند بدون دخالت در کد. مقادیر url و contacts فعلاً placeholder هستند؛ با اطلاعات واقعی جایگزین شوند.",
-
   "works": [
     {
       "id": "reel-psychology",
-      "title": { "fa": "ریلز داستانی — صفحه روان‌شناسی", "en": "Narrative Reel — Psychology page" },
+      "title": {
+        "fa": "ریلز داستانی — صفحه روان‌شناسی",
+        "en": "Narrative Reel — Psychology page"
+      },
       "category": "Instagram",
-      "desc": { "fa": "۴۰ ثانیه • قلاب، کنجکاوی، نتیجه", "en": "40s • hook, curiosity, payoff" },
+      "desc": {
+        "fa": "۴۰ ثانیه • قلاب، کنجکاوی، نتیجه",
+        "en": "40s • hook, curiosity, payoff"
+      },
       "detail": {
         "fa": "یک روایت ۴۰ ثانیه‌ای با قلاب قوی در ثانیه‌های اول، ریتم کنجکاوی‌ساز و پایان‌بندی مشخص. مناسب صفحاتی که می‌خواهند مخاطب تا انتها بماند.",
         "en": "A 40-second narrative with a strong hook in the first seconds, curiosity-driven rhythm and a clear ending — built for pages that want viewers to stay till the end."
       },
-      "tools": ["Premiere Pro"],
-      "role": { "fa": "تدوین و روایت", "en": "Editing & narrative" },
+      "tools": [
+        "Premiere Pro"
+      ],
+      "role": {
+        "fa": "تدوین و روایت",
+        "en": "Editing & narrative"
+      },
       "url": null,
       "icon": "psychology",
-      "gradient": ["#e8552e", "#7a2d8f"],
+      "gradient": [
+        "#e8552e",
+        "#7a2d8f"
+      ],
       "duration": "0:40"
     },
     {
       "id": "product-intro",
-      "title": { "fa": "معرفی محصول — تبلیغاتی", "en": "Product intro — Advertising" },
+      "title": {
+        "fa": "معرفی محصول — تبلیغاتی",
+        "en": "Product intro — Advertising"
+      },
       "category": "Ads",
-      "desc": { "fa": "ریتم تند، موشن هدفمند", "en": "Fast rhythm, purposeful motion" },
+      "desc": {
+        "fa": "ریتم تند، موشن هدفمند",
+        "en": "Fast rhythm, purposeful motion"
+      },
       "detail": {
         "fa": "آگهی کوتاه معرفی محصول با ریتم تند و موشن‌گرافیک هدفمند؛ هر فریم در خدمت پیام برند است، نه نمایش افکت.",
         "en": "A short product ad with fast rhythm and purposeful motion graphics; every frame serves the brand message, not the effects."
       },
-      "tools": ["Premiere Pro", "After Effects"],
-      "role": { "fa": "تدوین و موشن‌گرافیک", "en": "Editing & motion graphics" },
+      "tools": [
+        "Premiere Pro",
+        "After Effects"
+      ],
+      "role": {
+        "fa": "تدوین و موشن‌گرافیک",
+        "en": "Editing & motion graphics"
+      },
       "url": null,
       "icon": "inventory_2",
-      "gradient": ["#0a0e17", "#2b5cff"],
+      "gradient": [
+        "#0a0e17",
+        "#2b5cff"
+      ],
       "duration": "0:30"
     },
     {
       "id": "youtube-narrative",
-      "title": { "fa": "ویدئوی یوتیوب — روایی", "en": "YouTube video — Narrative" },
+      "title": {
+        "fa": "ویدئوی یوتیوب — روایی",
+        "en": "YouTube video — Narrative"
+      },
       "category": "YouTube",
-      "desc": { "fa": "ساختار داستانی و پایان مشخص", "en": "Story structure and clear ending" },
+      "desc": {
+        "fa": "ساختار داستانی و پایان مشخص",
+        "en": "Story structure and clear ending"
+      },
       "detail": {
         "fa": "ویدئوی بلند روایی با ساختار سه‌پرده‌ای: قلاب، توسعه، نتیجه. نگه‌داشتن مخاطب در مدت طولانی با ریتم درست و حذف اضافات.",
         "en": "A long-form narrative video with a three-act structure: hook, development, payoff. Keeping viewers engaged with the right rhythm and tight cuts."
       },
-      "tools": ["Premiere Pro"],
-      "role": { "fa": "تدوین", "en": "Editing" },
+      "tools": [
+        "Premiere Pro"
+      ],
+      "role": {
+        "fa": "تدوین",
+        "en": "Editing"
+      },
       "url": null,
       "icon": "play_circle",
-      "gradient": ["#0f766e", "#0a0e17"],
+      "gradient": [
+        "#0f766e",
+        "#0a0e17"
+      ],
       "duration": "8:20"
     },
     {
       "id": "fitness-reel",
-      "title": { "fa": "ریلز تناسب اندام", "en": "Fitness Reel" },
+      "title": {
+        "fa": "ریلز تناسب اندام",
+        "en": "Fitness Reel"
+      },
       "category": "Instagram",
-      "desc": { "fa": "کات‌های پرانرژی، موسیقی هماهنگ", "en": "Energetic cuts, synced music" },
+      "desc": {
+        "fa": "کات‌های پرانرژی، موسیقی هماهنگ",
+        "en": "Energetic cuts, synced music"
+      },
       "detail": {
         "fa": "کات‌های پرانرژی کاملاً سینک با ضرب موسیقی؛ انرژی حرکت ورزشکار با ریتم تدوین یکی می‌شود.",
         "en": "Energetic cuts perfectly synced to the beat; the athlete's movement energy and the edit rhythm become one."
       },
-      "tools": ["Premiere Pro"],
-      "role": { "fa": "تدوین", "en": "Editing" },
+      "tools": [
+        "Premiere Pro"
+      ],
+      "role": {
+        "fa": "تدوین",
+        "en": "Editing"
+      },
       "url": null,
       "icon": "fitness_center",
-      "gradient": ["#b45309", "#e8552e"],
+      "gradient": [
+        "#b45309",
+        "#e8552e"
+      ],
       "duration": "0:35"
     },
     {
       "id": "podcast-visual",
-      "title": { "fa": "پادکست — تدوین تصویری", "en": "Podcast — Visual edit" },
+      "title": {
+        "fa": "پادکست — تدوین تصویری",
+        "en": "Podcast — Visual edit"
+      },
       "category": "YouTube",
-      "desc": { "fa": "تدوین چنددوربینه و زیرنویس", "en": "Multi-cam edit and captions" },
+      "desc": {
+        "fa": "تدوین چنددوربینه و زیرنویس",
+        "en": "Multi-cam edit and captions"
+      },
       "detail": {
         "fa": "تدوین چنددوربینه پادکست با تعویض زاویه در لحظه‌های درست گفتگو، زیرنویس‌گذاری تمیز و استایل تصویری ثابت.",
         "en": "Multi-cam podcast editing switching angles at the right conversational moments, clean captions and a consistent visual style."
       },
-      "tools": ["Premiere Pro"],
-      "role": { "fa": "تدوین و زیرنویس", "en": "Editing & captions" },
+      "tools": [
+        "Premiere Pro"
+      ],
+      "role": {
+        "fa": "تدوین و زیرنویس",
+        "en": "Editing & captions"
+      },
       "url": null,
       "icon": "mic",
-      "gradient": ["#334155", "#e8552e"],
+      "gradient": [
+        "#334155",
+        "#e8552e"
+      ],
       "duration": "24:00"
     },
     {
       "id": "brand-motion",
-      "title": { "fa": "موشن‌گرافیک — معرفی برند", "en": "Motion graphics — Brand intro" },
+      "title": {
+        "fa": "موشن‌گرافیک — معرفی برند",
+        "en": "Motion graphics — Brand intro"
+      },
       "category": "Ads",
-      "desc": { "fa": "انیمیشن لوگو و تایپوگرافی", "en": "Logo animation and typography" },
+      "desc": {
+        "fa": "انیمیشن لوگو و تایپوگرافی",
+        "en": "Logo animation and typography"
+      },
       "detail": {
         "fa": "انیمیشن لوگو و تایپوگرافی متحرک برای معرفی برند؛ ۲۰ ثانیه‌ای که هویت بصری برند را در ذهن مخاطب جا می‌اندازد.",
         "en": "Logo animation and kinetic typography for brand intros — 20 seconds that imprint the brand's visual identity."
       },
-      "tools": ["After Effects"],
-      "role": { "fa": "موشن‌گرافیک", "en": "Motion graphics" },
+      "tools": [
+        "After Effects"
+      ],
+      "role": {
+        "fa": "موشن‌گرافیک",
+        "en": "Motion graphics"
+      },
       "url": null,
       "icon": "auto_awesome",
-      "gradient": ["#7c3aed", "#0a0e17"],
+      "gradient": [
+        "#7c3aed",
+        "#0a0e17"
+      ],
       "duration": "0:20"
     }
   ],
-
   "skills": [
-    { "name": { "fa": "Adobe Premiere Pro", "en": "Adobe Premiere Pro" }, "value": 92 },
-    { "name": { "fa": "Adobe After Effects", "en": "Adobe After Effects" }, "value": 85 },
-    { "name": { "fa": "Adobe Photoshop", "en": "Adobe Photoshop" }, "value": 68 },
-    { "name": { "fa": "موشن‌گرافیک", "en": "Motion Graphics" }, "value": 82 },
-    { "name": { "fa": "سناریونویسی و روایت", "en": "Scenario & narrative" }, "value": 88 },
-    { "name": { "fa": "تصویربرداری", "en": "Videography" }, "value": 76 }
-  ],
-
-  "collabs": [
     {
-      "name": { "fa": "Arvin Veera", "en": "Arvin Veera" },
-      "desc": { "fa": "همکاری حضوری", "en": "In-person collaboration" },
-      "period": null
+      "name": {
+        "fa": "Adobe Premiere Pro",
+        "en": "Adobe Premiere Pro"
+      },
+      "value": 92
     },
     {
-      "name": { "fa": "MasterCrab", "en": "MasterCrab" },
-      "desc": { "fa": "تدوین و تولید محتوا", "en": "Editing & content" },
-      "period": null
+      "name": {
+        "fa": "Adobe After Effects",
+        "en": "Adobe After Effects"
+      },
+      "value": 85
     },
     {
-      "name": { "fa": "Bayestan", "en": "Bayestan" },
-      "desc": { "fa": "تدوین و تولید محتوا", "en": "Editing & content" },
-      "period": null
+      "name": {
+        "fa": "Adobe Photoshop",
+        "en": "Adobe Photoshop"
+      },
+      "value": 68
     },
     {
-      "name": { "fa": "GoldRoom", "en": "GoldRoom" },
-      "desc": { "fa": "تدوین و تولید محتوا", "en": "Editing & content" },
-      "period": null
+      "name": {
+        "fa": "موشن‌گرافیک",
+        "en": "Motion Graphics"
+      },
+      "value": 82
     },
     {
-      "name": { "fa": "Verbica", "en": "Verbica" },
-      "desc": { "fa": "تدوین و تولید محتوا", "en": "Editing & content" },
-      "period": null
+      "name": {
+        "fa": "سناریونویسی و روایت",
+        "en": "Scenario & narrative"
+      },
+      "value": 88
     },
     {
-      "name": { "fa": "صفحات روان‌شناسی و تناسب اندام", "en": "Psychology & fitness pages" },
-      "desc": { "fa": "تدوین برای شبکه‌های اجتماعی", "en": "Social media editing" },
-      "period": { "fa": "از میانه ۱۴۰۳", "en": "since mid-1403" }
+      "name": {
+        "fa": "تصویربرداری",
+        "en": "Videography"
+      },
+      "value": 76
     }
   ],
-
+  "collabs": [
+    {
+      "name": {
+        "fa": "Arvin Veera",
+        "en": "Arvin Veera"
+      },
+      "desc": {
+        "fa": "همکاری حضوری",
+        "en": "In-person collaboration"
+      },
+      "period": null
+    },
+    {
+      "name": {
+        "fa": "MasterCrab",
+        "en": "MasterCrab"
+      },
+      "desc": {
+        "fa": "تدوین و تولید محتوا",
+        "en": "Editing & content"
+      },
+      "period": null
+    },
+    {
+      "name": {
+        "fa": "Bayestan",
+        "en": "Bayestan"
+      },
+      "desc": {
+        "fa": "تدوین و تولید محتوا",
+        "en": "Editing & content"
+      },
+      "period": null
+    },
+    {
+      "name": {
+        "fa": "GoldRoom",
+        "en": "GoldRoom"
+      },
+      "desc": {
+        "fa": "تدوین و تولید محتوا",
+        "en": "Editing & content"
+      },
+      "period": null
+    },
+    {
+      "name": {
+        "fa": "Verbica",
+        "en": "Verbica"
+      },
+      "desc": {
+        "fa": "تدوین و تولید محتوا",
+        "en": "Editing & content"
+      },
+      "period": null
+    },
+    {
+      "name": {
+        "fa": "صفحات روان‌شناسی و تناسب اندام",
+        "en": "Psychology & fitness pages"
+      },
+      "desc": {
+        "fa": "تدوین برای شبکه‌های اجتماعی",
+        "en": "Social media editing"
+      },
+      "period": {
+        "fa": "از میانه ۱۴۰۳",
+        "en": "since mid-1403"
+      }
+    }
+  ],
   "services": [
     {
-      "title": { "fa": "تدوین ویدئو", "en": "Video editing" },
-      "desc": { "fa": "ریلز، یوتیوب، تبلیغاتی — قلاب، روایت، پایان «آها!»", "en": "Reels, YouTube, ads — hook, story, the 'aha!' ending" },
+      "title": {
+        "fa": "تدوین ویدئو",
+        "en": "Video editing"
+      },
+      "desc": {
+        "fa": "ریلز، یوتیوب، تبلیغاتی — قلاب، روایت، پایان «آها!»",
+        "en": "Reels, YouTube, ads — hook, story, the 'aha!' ending"
+      },
       "icon": "movie"
     },
     {
-      "title": { "fa": "موشن‌گرافیک", "en": "Motion graphics" },
-      "desc": { "fa": "انیمیشن لوگو، تایپوگرافی متحرک، معرفی برند", "en": "Logo animation, kinetic typography, brand intros" },
+      "title": {
+        "fa": "موشن‌گرافیک",
+        "en": "Motion graphics"
+      },
+      "desc": {
+        "fa": "انیمیشن لوگو، تایپوگرافی متحرک، معرفی برند",
+        "en": "Logo animation, kinetic typography, brand intros"
+      },
       "icon": "auto_awesome"
     },
     {
-      "title": { "fa": "تصویربرداری", "en": "Videography" },
-      "desc": { "fa": "تولید محتوای تصویری با تجهیزات حرفه‌ای", "en": "Visual content production with pro gear" },
+      "title": {
+        "fa": "تصویربرداری",
+        "en": "Videography"
+      },
+      "desc": {
+        "fa": "تولید محتوای تصویری با تجهیزات حرفه‌ای",
+        "en": "Visual content production with pro gear"
+      },
       "icon": "videocam"
     },
     {
-      "title": { "fa": "سناریونویسی و روایت", "en": "Scenario & narrative" },
-      "desc": { "fa": "ساختار داستانی و متن برای ویدئوهای کوتاه و بلند", "en": "Story structure and scripts for short & long videos" },
+      "title": {
+        "fa": "سناریونویسی و روایت",
+        "en": "Scenario & narrative"
+      },
+      "desc": {
+        "fa": "ساختار داستانی و متن برای ویدئوهای کوتاه و بلند",
+        "en": "Story structure and scripts for short & long videos"
+      },
       "icon": "edit_note"
     }
   ],
-
   "contacts": [
     {
       "type": "telegram",
@@ -184,5 +362,151 @@
       "value": "hojat.ramezani@gmail.com",
       "url": "mailto:hojat.ramezani@gmail.com"
     }
-  ]
+  ],
+  "texts": {
+    "fa": {
+      "kicker": "Video Editor & Content Producer",
+      "name": "حجت رمضانی",
+      "nameEn": "Hojjat Ramezani",
+      "heroLead": "تدوینگر ویدئو از مشهد؛ ویدئویی که قلاب دارد، روایت دارد و پایانش یک «آها!» دارد.",
+      "seeWorks": "دیدن نمونه‌کارها",
+      "aboutMe": "درباره من",
+      "presentMode": "حالت ارائه 🎬",
+      "stat1v": "Premiere Pro",
+      "stat1": "ابزار اصلی تدوین",
+      "stat2v": "After Effects",
+      "stat2": "موشن‌گرافیک",
+      "stat3v": "مشهد، ایران",
+      "stat3": "محل فعالیت",
+      "approach": "رویکرد من به تدوین",
+      "approachSub": "تمیز، هدفمند، داستان‌محور",
+      "a1t": "۱. قلاب قوی",
+      "a1": "شروعی که دلیل روشنی برای ادامه تماشا بدهد.",
+      "a2t": "۲. روایت روشن",
+      "a2": "مسیر قابل‌فهم، ریتم خوب و بدون خستگی.",
+      "a3t": "۳. موشن هدفمند",
+      "a3": "افکت و موشن‌گرافیک در خدمت محتوا، نه نمایش مهارت.",
+      "a4t": "۴. پایان «آها!»",
+      "a4": "پایان‌بندی مشخص که مخاطب نکته‌ای تازه ببرد.",
+      "featured": "نمونه‌کارهای منتخب",
+      "seeAll": "همه",
+      "works": "نمونه‌کارها",
+      "worksSub": "نمونه‌های سبک کاری — بدون فایل سنگین داخل اپ",
+      "worksNote": "ویدئوهای کامل نمونه‌کارها به‌صورت لینک / فایل جداگانه ارائه می‌شوند تا حجم اپ سبک بماند.",
+      "aboutTitle": "درباره حجت",
+      "aboutText": "تدوینگر و تولیدکننده محتوای تصویری. تمرکز اصلی‌ام تدوین ویدئوست؛ موشن‌گرافیک، تصویربرداری، سناریونویسی و طراحی گرافیک مهارت‌های مکمل من‌اند. از حدود ۱۵ سالگی وارد تولید محتوا شدم و از میانه ۱۴۰۳ به‌صورت جدی فریلنس تدوین برای صفحات اینستاگرامی را دنبال کرده‌ام.",
+      "skills": "مهارت‌ها و ابزارها",
+      "exp": "همکاری‌های منتخب",
+      "expSub": "فهرست منتخب، نه رزومه کامل",
+      "services": "خدمات",
+      "servicesSub": "چه کارهایی از من برمی‌آید",
+      "edu": "تحصیلات و تجهیزات",
+      "eduT": "کاردانی مدیریت کسب‌وکار",
+      "eduD": "مرکز آموزش علمی‌کاربردی خراسان • ۱۴۰۳ تا ۱۴۰۶ • معدل حدود ۱۷",
+      "gearT": "تجهیزات",
+      "gearText": "Sony ZV-1 • BOYA BY-M1 • Intel i5-12400 • Dual Monitor",
+      "contactT": "همکاری؟",
+      "contactD": "برای پروژه‌های تدوین، موشن‌گرافیک و تولید محتوا در دسترسم. این اپ آنلاین است؛ پیام شما روی همین دستگاه ذخیره می‌شود.",
+      "contactRows": "راه‌های ارتباط",
+      "copied": "کپی شد ✓",
+      "phName": "نام شما",
+      "phMsg": "درباره پروژه‌تان بنویسید…",
+      "sendMsg": "ثبت پیام",
+      "exportMsgs": "خروجی پیام‌ها (کپی)",
+      "noMsgs": "هنوز پیامی ثبت نشده است.",
+      "navHome": "خانه",
+      "navWorks": "نمونه‌کار",
+      "navAbout": "درباره",
+      "navContact": "تماس",
+      "footer": "ساخته‌شده با کمک هوش مصنوعی • نسخه ۲.۰",
+      "modeInterviewer": "حالت مصاحبه‌کننده",
+      "modeDeveloper": "حالت توسعه‌دهنده",
+      "bannerI": "حالت مصاحبه‌کننده: نمای تمیز و ساده برای ارائه به مصاحبه‌کننده.",
+      "bannerD": "حالت توسعه‌دهنده: نمای کامل با اطلاعات مدیریتی و جزئیات محتوا.",
+      "msgSaved": "پیام شما ثبت شد. ممنون!",
+      "msgEmpty": "لطفاً پیام را بنویسید.",
+      "all": "همه",
+      "devInfo": "۶ نمونه‌کار • ۶ مهارت • ۶ همکاری منتخب • پیام‌ها به‌صورت محلی ذخیره می‌شوند • بدون فایل ویدیویی سنگین داخل APK",
+      "detail": "جزئیات پروژه",
+      "tools": "ابزارها",
+      "role": "نقش من",
+      "durationL": "مدت زمان",
+      "watchVideo": "مشاهده ویدیو",
+      "copyLink": "کپی لینک",
+      "noVideoYet": "ویدئوی کامل این نمونه‌کار به‌صورت لینک/فایل جداگانه ارائه می‌شود — از صفحه تماس درخواست بدهید.",
+      "storiesHint": "برای دیدن نمونه‌کار بعدی، بکش یا ضربه بزن"
+    },
+    "en": {
+      "kicker": "Video Editor & Content Producer",
+      "name": "Hojjat Ramezani",
+      "nameEn": "حجت رمضانی",
+      "heroLead": "Video editor from Mashhad — videos with a strong hook, a clear story, and an ending that lands an \"aha!\" moment.",
+      "seeWorks": "View selected works",
+      "aboutMe": "About me",
+      "presentMode": "Present mode 🎬",
+      "stat1v": "Premiere Pro",
+      "stat1": "Main editing tool",
+      "stat2v": "After Effects",
+      "stat2": "Motion graphics",
+      "stat3v": "Mashhad, Iran",
+      "stat3": "Based in",
+      "approach": "My approach to editing",
+      "approachSub": "Clean, purposeful, story-driven",
+      "a1t": "1. Strong hook",
+      "a1": "An opening that gives a clear reason to keep watching.",
+      "a2t": "2. Clear narrative",
+      "a2": "An understandable path, good rhythm, never boring.",
+      "a3t": "3. Purposeful motion",
+      "a3": "Effects and motion graphics serve the story, not the showreel.",
+      "a4t": "4. The \"aha!\" ending",
+      "a4": "A clear ending that leaves the viewer with something new.",
+      "featured": "Selected works",
+      "seeAll": "All",
+      "works": "Selected works",
+      "worksSub": "Style samples — no heavy files inside the app",
+      "worksNote": "Full videos are shared by link / separate file, so the app stays light.",
+      "aboutTitle": "About Hojjat",
+      "aboutText": "Video editor and visual content producer. Editing is my core craft; motion graphics, videography, scenario writing and graphic design are complementary skills. I entered content production around age 15 and have freelanced in editing for Instagram pages since mid-1403.",
+      "skills": "Skills & tools",
+      "exp": "Selected collaborations",
+      "expSub": "A selected list, not a full CV",
+      "services": "Services",
+      "servicesSub": "What I can do for you",
+      "edu": "Education & gear",
+      "eduT": "Associate Degree, Business Management",
+      "eduD": "Scientific-Applied Center, Khorasan • 1403–1406 • GPA ~17",
+      "gearT": "Gear",
+      "gearText": "Sony ZV-1 • BOYA BY-M1 • Intel i5-12400 • Dual Monitor",
+      "contactT": "Work together?",
+      "contactD": "Available for editing, motion graphics and content projects. This app works online; your message is saved on this device.",
+      "contactRows": "Get in touch",
+      "copied": "Copied ✓",
+      "phName": "Your name",
+      "phMsg": "Tell me about your project…",
+      "sendMsg": "Save message",
+      "exportMsgs": "Export messages (copy)",
+      "noMsgs": "No messages saved yet.",
+      "navHome": "Home",
+      "navWorks": "Works",
+      "navAbout": "About",
+      "navContact": "Contact",
+      "footer": "Built with the help of AI • v2.0",
+      "modeInterviewer": "Interviewer mode",
+      "modeDeveloper": "Developer mode",
+      "bannerI": "Interviewer mode: a clean, simple view for presenting to an interviewer.",
+      "bannerD": "Developer mode: full view with management info and content details.",
+      "msgSaved": "Your message was saved. Thank you!",
+      "msgEmpty": "Please write a message first.",
+      "all": "All",
+      "devInfo": "6 works • 6 skills • 6 selected collaborations • Messages are stored locally • No heavy video files inside the APK",
+      "detail": "Project details",
+      "tools": "Tools",
+      "role": "My role",
+      "durationL": "Duration",
+      "watchVideo": "Watch video",
+      "copyLink": "Copy link",
+      "noVideoYet": "The full video for this work is shared by link / separate file — request it from the contact page.",
+      "storiesHint": "Swipe or tap to see the next work"
+    }
+  }
 }

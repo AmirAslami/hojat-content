@@ -221,9 +221,6 @@ footer{text-align:center;color:var(--muted);font-size:11px;padding:24px 0 80px;p
     <input id="repo" class="repo" placeholder="ریپو: AmirAslami/hojat-content">
     <input id="tok" class="tok" type="password" placeholder="توکن گیت‌هاب (ghp_...)">
     <button class="b-ghost" onclick="loadFromGithub()">⬇️ بارگذاری</button>
-    <button class="b-ghost" onclick="document.getElementById('fileInput').click()">📁 از فایل</button>
-    <input id="fileInput" type="file" accept=".json" style="display:none" onchange="loadFromFile(this)">
-    <button class="b-ghost" onclick="downloadFile()">💾 دانلود</button>
   </div>
 </header>
 
@@ -272,6 +269,11 @@ footer{text-align:center;color:var(--muted);font-size:11px;padding:24px 0 80px;p
     </div></div>
   </section>
 
+  <section id="sec-texts">
+    <div class="sec-head" onclick="toggleSec('sec-texts')"><span class="emoji">📝</span><h2>متن‌های صفحه</h2><span class="count" id="textsCount"></span><span class="chev">▼</span></div>
+    <div class="sec-body"><div class="sec-body-in"><div id="texts"></div></div></div>
+  </section>
+
   <footer>پنل HOJAT • ذخیره در گیت‌هاب • اپ هر ۳۰ ثانیه خودش را به‌روز می‌کند</footer>
 </main>
 
@@ -291,7 +293,7 @@ const CATS = ['Instagram','YouTube','Ads'];
 const CONTACT_TYPES = ['telegram','instagram','email'];
 
 // --- FIX: data starts as a blank template so همه دکمه‌های افزودن از همان ابتدا کار می‌کنند ---
-function blankData(){ return { _note:'محتوا از پنل مدیریت ویرایش می‌شود', works:[], skills:[], collabs:[], services:[], contacts:[] }; }
+function blankData(){ return { texts:{fa:{}, en:{}}, works:[], skills:[], collabs:[], services:[], contacts:[] }; }
 let data = blankData();
 let fileSha = null;
 let owner = '', repo = '', branch = 'main', path = 'content.json';
@@ -338,6 +340,7 @@ function refreshCounts() {
   $('collabsCount').textContent = data.collabs.length + ' مورد';
   $('servicesCount').textContent = data.services.length + ' مورد';
   $('contactsCount').textContent = data.contacts.length + ' مورد';
+  $('textsCount').textContent = Object.keys(data.texts?.fa || {}).length + ' متن';
 }
 function stagger(container) {
   [...container.querySelectorAll('.item')].forEach((n, i) => n.style.animationDelay = (i * 45) + 'ms');
@@ -385,6 +388,7 @@ async function loadFromGithub() {
     const json = await res.json();
     fileSha = json.sha;
     data = JSON.parse(atob(json.content.replace(/\n/g, '')));
+    if (!data.texts || typeof data.texts !== 'object') data.texts = {fa:{}, en:{}};
     for (const k of ['works','skills','collabs','services','contacts']) if (!Array.isArray(data[k])) data[k] = [];
     hideEmpty(); renderAll();
     setStatus(`بارگذاری شد • ${new Date().toLocaleTimeString('fa-IR')}`, 'ok');
@@ -426,18 +430,10 @@ async function saveToGithub(silent = false) {
   }
 }
 function loadFromFile(input) {
-  const f = input.files[0]; if (!f) return;
-  const reader = new FileReader();
-  reader.onload = () => {
-    try { data = JSON.parse(reader.result); for (const k of ['works','skills','collabs','services','contacts']) if (!Array.isArray(data[k])) data[k] = []; fileSha = null; hideEmpty(); renderAll(); toast('فایل بارگذاری شد ✓', 'ok'); }
-    catch { toast('فایل JSON معتبر نیست', 'err'); }
-  };
-  reader.readAsText(f);
+  // removed — JSON files are invisible to the user; the panel + GitHub are everything
 }
 function downloadFile() {
-  const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
-  const a = document.createElement('a');
-  a.href = URL.createObjectURL(blob); a.download = 'content.json'; a.click();
+  // removed — same reason
 }
 
 // ---------------- media upload ----------------
@@ -502,7 +498,7 @@ function clearMedia(i, kind) {
 
 // ---------------- renderers ----------------
 function renderAll() {
-  renderWorks(); renderSkills(); renderCollabs(); renderServices(); renderContacts();
+  renderWorks(); renderSkills(); renderCollabs(); renderServices(); renderContacts(); renderTexts();
   refreshCounts();
   stagger($('works')); stagger($('skills')); stagger($('collabs')); stagger($('services')); stagger($('contacts'));
 }
@@ -603,6 +599,70 @@ function renderContacts() {
     item.appendChild(field('لینک کامل (اختیاری)', c.url, e => c.url = e.target.value));
     box.appendChild(item);
   });
+}
+
+// ---------------- texts (everything visible on the app screens) ----------------
+const TEXT_FIELDS = [
+  {k:'name', l:'نام و نام‌خانوادگی'},
+  {k:'nameEn', l:'نام لاتین (زیر نام فارسی)'},
+  {k:'kicker', l:'تخصص (خط بالای نام)'},
+  {k:'heroLead', l:'جمله معرفی (زیر نام)'},
+  {k:'seeWorks', l:'دکمه: دیدن نمونه‌کارها'},
+  {k:'aboutMe', l:'دکمه: درباره من'},
+  {k:'presentMode', l:'دکمه: حالت ارائه'},
+  {k:'stat1v', l:'تگ ۱ (مثل Premiere Pro)'},
+  {k:'stat1', l:'زیرنویس تگ ۱'},
+  {k:'stat2v', l:'تگ ۲ (مثل After Effects)'},
+  {k:'stat2', l:'زیرنویس تگ ۲'},
+  {k:'stat3v', l:'تگ ۳ (شهر)'},
+  {k:'stat3', l:'زیرنویس تگ ۳'},
+  {k:'approach', l:'تیتر: رویکرد من به تدوین'},
+  {k:'approachSub', l:'زیرتیتر رویکرد'},
+  {k:'a1t', l:'رویکرد ۱ — عنوان'},
+  {k:'a1', l:'رویکرد ۱ — توضیح'},
+  {k:'a2t', l:'رویکرد ۲ — عنوان'},
+  {k:'a2', l:'رویکرد ۲ — توضیح'},
+  {k:'a3t', l:'رویکرد ۳ — عنوان'},
+  {k:'a3', l:'رویکرد ۳ — توضیح'},
+  {k:'a4t', l:'رویکرد ۴ — عنوان'},
+  {k:'a4', l:'رویکرد ۴ — توضیح'},
+  {k:'featured', l:'تیتر: نمونه‌کارهای منتخب'},
+  {k:'works', l:'تیتر صفحه نمونه‌کارها'},
+  {k:'worksSub', l:'زیرتیتر نمونه‌کارها'},
+  {k:'worksNote', l:'یادداشت پایین نمونه‌کارها'},
+  {k:'aboutTitle', l:'تیتر درباره من'},
+  {k:'aboutText', l:'متن درباره من'},
+  {k:'skills', l:'تیتر مهارت‌ها'},
+  {k:'exp', l:'تیتر همکاری‌ها'},
+  {k:'expSub', l:'زیرتیتر همکاری‌ها'},
+  {k:'services', l:'تیتر خدمات'},
+  {k:'servicesSub', l:'زیرتیتر خدمات'},
+  {k:'edu', l:'تیتر تحصیلات و تجهیزات'},
+  {k:'eduT', l:'عنوان مدرک'},
+  {k:'eduD', l:'توضیح مدرک'},
+  {k:'gearT', l:'تیتر تجهیزات'},
+  {k:'gearText', l:'متن تجهیزات'},
+  {k:'contactT', l:'تیتر همکاری؟'},
+  {k:'contactD', l:'متن دعوت به همکاری'},
+  {k:'contactRows', l:'تیتر راه‌های ارتباط'},
+  {k:'sendMsg', l:'دکمه ثبت پیام'},
+  {k:'phName', l:'جای‌نگه‌دار: نام'},
+  {k:'phMsg', l:'جای‌نگه‌دار: پیام'},
+  {k:'footer', l:'متن فوتر'},
+];
+function renderTexts() {
+  data.texts = data.texts || {fa:{}, en:{}};
+  data.texts.fa = data.texts.fa || {}; data.texts.en = data.texts.en || {};
+  const box = $('texts'); box.innerHTML = '';
+  TEXT_FIELDS.forEach(({k, l}) => {
+    const item = el('div', {class:'item'});
+    const row = el('div', {class:'row'});
+    row.appendChild(field(l + ' (فارسی)', data.texts.fa[k], e => data.texts.fa[k] = e.target.value, 'textarea'));
+    row.appendChild(field(l + ' (انگلیسی)', data.texts.en[k], e => data.texts.en[k] = e.target.value, 'textarea'));
+    item.appendChild(row);
+    box.appendChild(item);
+  });
+  stagger(box);
 }
 
 function blankTr(fa = '', en = '') { return {fa, en}; }
