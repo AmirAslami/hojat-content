@@ -7,23 +7,23 @@
     {
       "id": "work-1795038449589",
       "title": {
-        "fa": "نمونه‌کار جدید",
+        "fa": "ÙÙÙÙÙâÚ©Ø§Ø± Ø¬Ø¯ÛØ¯",
         "en": "New work"
       },
       "category": "Instagram",
       "desc": {
-        "fa": "توضیح کوتاه…",
-        "en": "Short description…"
+        "fa": "ØªÙØ¶ÛØ­ Ú©ÙØªØ§Ùâ¦",
+        "en": "Short descriptionâ¦"
       },
       "detail": {
-        "fa": "توضیح کامل…",
-        "en": "Full description…"
+        "fa": "ØªÙØ¶ÛØ­ Ú©Ø§ÙÙâ¦",
+        "en": "Full descriptionâ¦"
       },
       "tools": [
         "Premiere Pro"
       ],
       "role": {
-        "fa": "تدوینگر",
+        "fa": "ØªØ¯ÙÛÙÚ¯Ø±",
         "en": "Editor"
       },
       "url": null,
@@ -37,8 +37,47 @@
       "duration": "0:30"
     }
   ],
-  "skills": [],
-  "collabs": [],
-  "services": [],
-  "contacts": []
+  "skills": [
+    {
+      "name": {
+        "fa": "مهارت جدید",
+        "en": "New skill"
+      },
+      "value": 70
+    }
+  ],
+  "collabs": [
+    {
+      "name": {
+        "fa": "همکاری جدید",
+        "en": "New collab"
+      },
+      "desc": {
+        "fa": "توضیح…",
+        "en": "Description…"
+      },
+      "period": null
+    }
+  ],
+  "services": [
+    {
+      "title": {
+        "fa": "خدمت جدید",
+        "en": "New service"
+      },
+      "desc": {
+        "fa": "توضیح…",
+        "en": "Description…"
+      },
+      "icon": "movie"
+    }
+  ],
+  "contacts": [
+    {
+      "type": "telegram",
+      "label": "Telegram",
+      "value": "@",
+      "url": ""
+    }
+  ]
 }
