@@ -26,14 +26,12 @@ body{
   line-height:1.8;font-size:14px;overflow-x:hidden;
 }
 
-/* ---------- animated background glows ---------- */
 .bg-glow{position:fixed;border-radius:50%;filter:blur(90px);opacity:.35;pointer-events:none;z-index:0}
 .glow1{width:420px;height:420px;background:var(--accent);top:-120px;right:-100px;animation:drift1 14s ease-in-out infinite alternate}
 .glow2{width:340px;height:340px;background:#7c3aed;bottom:-100px;left:-80px;animation:drift2 18s ease-in-out infinite alternate}
 @keyframes drift1{from{transform:translate(0,0) scale(1)}to{transform:translate(-60px,50px) scale(1.15)}}
 @keyframes drift2{from{transform:translate(0,0) scale(1.1)}to{transform:translate(70px,-45px) scale(.95)}}
 
-/* ---------- header ---------- */
 header{
   position:relative;z-index:2;padding:26px 22px 18px;overflow:hidden;
   background:linear-gradient(135deg,#0a0e17 0%,#141c2d 55%,#3a1c10 100%);
@@ -62,7 +60,6 @@ header>*{position:relative;z-index:1}
 .bar input.repo{width:230px}
 .bar input.tok{width:280px}
 
-/* ---------- buttons ---------- */
 button{
   font-family:inherit;cursor:pointer;border:none;border-radius:14px;
   padding:10px 18px;font-size:13px;font-weight:700;color:#fff;
@@ -78,12 +75,13 @@ button:disabled{opacity:.5;cursor:wait}
 .b-soft:hover{border-color:var(--accent);color:var(--accent2)}
 .b-danger{background:none;color:#f87171;border:1px solid rgba(239,68,68,.45);padding:6px 14px;font-size:12px;border-radius:11px}
 .b-danger:hover{background:rgba(239,68,68,.12);border-color:#f87171}
+.b-media{background:rgba(232,85,46,.12);color:var(--accent2);border:1px solid rgba(232,85,46,.4);padding:7px 14px;font-size:12px;border-radius:11px}
+.b-media:hover{background:rgba(232,85,46,.22)}
 .b-ok{background:linear-gradient(135deg,var(--ok),#16c79a);box-shadow:0 4px 18px rgba(15,157,118,.4);padding:12px 30px}
 .b-ok:hover{box-shadow:0 6px 26px rgba(15,157,118,.6);transform:translateY(-1px)}
 .b-ok.saving{animation:pulse 1.2s ease-in-out infinite}
 @keyframes pulse{0%,100%{box-shadow:0 0 0 0 rgba(15,157,118,.45)}50%{box-shadow:0 0 0 12px rgba(15,157,118,0)}}
 
-/* ---------- main & sections ---------- */
 main{position:relative;z-index:1;max-width:900px;margin:0 auto;padding:10px 16px 90px}
 .hint{
   font-size:12px;color:var(--muted);background:var(--surface);border:1px solid var(--line);
@@ -116,12 +114,9 @@ section.open .sec-head .chev{transform:rotate(180deg);color:var(--accent2)}
 
 .sec-body{display:grid;grid-template-rows:0fr;transition:grid-template-rows .4s cubic-bezier(.4,0,.2,1)}
 section.open .sec-body{grid-template-rows:1fr}
-.sec-body-in{overflow:hidden;padding:0 16px}
+.sec-body-in{overflow:hidden;padding:0 16px;transition:padding .4s}
 section.open .sec-body-in{padding:12px 16px}
-/* smooth padding transition */
-.sec-body-in{transition:padding .4s}
 
-/* ---------- items ---------- */
 .item{
   border:1px solid var(--line);border-radius:14px;padding:13px;margin-bottom:10px;
   background:var(--bg2);
@@ -133,8 +128,28 @@ section.open .sec-body-in{padding:12px 16px}
 .item-head b{flex:1;font-size:14px}
 .item-head b::before{content:'●';color:var(--accent);font-size:9px;margin-left:8px}
 
+.media-strip{
+  display:flex;gap:10px;align-items:center;flex-wrap:wrap;
+  background:rgba(232,85,46,.05);border:1px dashed rgba(232,85,46,.35);
+  border-radius:12px;padding:9px 11px;margin-bottom:9px;
+}
+.thumb-preview{
+  width:64px;height:42px;border-radius:8px;object-fit:cover;
+  border:1px solid var(--line);background:var(--surface);
+}
+.badge-ok{
+  font-size:11px;color:var(--ok);border:1px solid rgba(15,157,118,.45);
+  border-radius:99px;padding:3px 11px;background:rgba(15,157,118,.08);
+  animation:popIn .4s cubic-bezier(.34,1.56,.64,1) both;
+}
+.badge-clear{
+  background:none;border:none;color:var(--muted);font-size:11px;padding:3px 8px;border-radius:99px;
+}
+.badge-clear:hover{color:#f87171}
+.up-note{font-size:10.5px;color:var(--muted)}
+
 .row{display:flex;gap:9px;flex-wrap:wrap;margin-bottom:8px}
-.field{flex:1;min-width:180px;animation:inherit}
+.field{flex:1;min-width:180px}
 .field label{display:block;font-size:11px;color:var(--muted);margin-bottom:4px;transition:color .25s}
 .field:focus-within label{color:var(--accent2)}
 .field input,.field textarea,.field select{
@@ -150,7 +165,6 @@ section.open .sec-body-in{padding:12px 16px}
 }
 .toolbar{display:flex;gap:8px;margin-top:12px;flex-wrap:wrap}
 
-/* ---------- save bar ---------- */
 .save-bar{
   position:fixed;bottom:0;left:0;right:0;z-index:20;
   background:rgba(13,18,32,.85);backdrop-filter:blur(14px);
@@ -160,24 +174,21 @@ section.open .sec-body-in{padding:12px 16px}
 .save-bar .status{font-size:12px;color:var(--muted);transition:color .3s}
 .save-bar .status.ok{color:var(--ok)} .save-bar .status.err{color:#f87171}
 
-/* ---------- toast ---------- */
 .toast{
   position:fixed;bottom:74px;left:50%;z-index:99;transform:translate(-50%,20px);
   background:var(--surface2);border:1px solid var(--line);color:var(--text);
   padding:11px 20px;border-radius:14px;font-size:13px;display:none;
-  box-shadow:0 10px 30px rgba(0,0,0,.5);white-space:nowrap;
+  box-shadow:0 10px 30px rgba(0,0,0,.5);white-space:nowrap;max-width:92vw;
   animation:toastIn .35s cubic-bezier(.34,1.56,.64,1) both;
 }
 .toast.ok{border-color:rgba(15,157,118,.5)} .toast.err{border-color:rgba(239,68,68,.5)}
 
-/* ---------- skeleton ---------- */
 #skeleton{position:fixed;inset:0;z-index:50;background:rgba(10,14,23,.92);backdrop-filter:blur(6px);display:none;align-items:center;justify-content:center;flex-direction:column;gap:18px}
 #skeleton.show{display:flex}
 .spinner{width:46px;height:46px;border-radius:50%;border:3px solid var(--line);border-top-color:var(--accent);animation:spin .8s linear infinite}
 @keyframes spin{to{transform:rotate(360deg)}}
 #skeleton p{color:var(--muted);font-size:13px;animation:blink 1.6s infinite}
 
-/* ---------- empty state ---------- */
 #empty{
   display:none;text-align:center;padding:46px 20px;border:1.5px dashed var(--line);
   border-radius:var(--radius);margin-top:16px;animation:fadeUp .5s ease both;
@@ -189,7 +200,6 @@ section.open .sec-body-in{padding:12px 16px}
 
 footer{text-align:center;color:var(--muted);font-size:11px;padding:24px 0 80px;position:relative;z-index:1}
 
-/* ---------- keyframes ---------- */
 @keyframes fadeUp{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:none}}
 @keyframes popIn{from{opacity:0;transform:scale(.7)}to{opacity:1;transform:scale(1)}}
 @keyframes toastIn{from{opacity:0;transform:translate(-50%,20px) scale(.9)}to{opacity:1;transform:translate(-50%,0) scale(1)}}
@@ -219,12 +229,12 @@ footer{text-align:center;color:var(--muted);font-size:11px;padding:24px 0 80px;p
 
 <main>
   <div class="hint"><span class="dot"></span>
-    تغییر کن، «ذخیره در گیت‌هاب» بزن — اپ حداکثر تا ۳۰ ثانیه بعد خودش به‌روز می‌شود. تنظیمات در همین مرورگر ذخیره می‌مانند.
+    نمونه‌کار: عکس کاور و ویدیو را از همین‌جا آپلود کن (ذخیره خودکار روی گیت‌هاب). لینک یوتیوب هم می‌توانی جایگزین ویدیو بگذاری. اپ حداکثر تا ۳۰ ثانیه بعد به‌روز می‌شود.
   </div>
 
   <div id="empty">
     <div class="big">🎬</div>
-    <p>هنوز محتوایی بارگذاری نشده — نام ریپو و توکن را وارد کن و «بارگذاری» بزن.</p>
+    <p>برای همگام‌سازی با گیت‌هاب، توکن را وارد و «بارگذاری» بزن — یا همین حالا از دکمه‌های «افزودن» شروع کن.</p>
   </div>
 
   <section id="sec-works" class="open">
@@ -270,7 +280,8 @@ footer{text-align:center;color:var(--muted);font-size:11px;padding:24px 0 80px;p
   <button class="b-ok" id="saveBtn" onclick="saveToGithub()">💾 ذخیره در گیت‌هاب</button>
 </div>
 <div class="toast" id="toast"></div>
-<div id="skeleton"><div class="spinner"></div><p>در حال ارتباط با گیت‌هاب…</p></div>
+<div id="skeleton"><div class="spinner"></div><p id="skeletonText">در حال ارتباط با گیت‌هاب…</p></div>
+<input id="mediaInput" type="file" style="display:none">
 
 <script>
 'use strict';
@@ -279,7 +290,10 @@ const ICON_LABELS = {psychology:'ذهن/روان‌شناسی', inventory_2:'م�
 const CATS = ['Instagram','YouTube','Ads'];
 const CONTACT_TYPES = ['telegram','instagram','email'];
 
-let data = null, fileSha = null;
+// --- FIX: data starts as a blank template so همه دکمه‌های افزودن از همان ابتدا کار می‌کنند ---
+function blankData(){ return { _note:'محتوا از پنل مدیریت ویرایش می‌شود', works:[], skills:[], collabs:[], services:[], contacts:[] }; }
+let data = blankData();
+let fileSha = null;
 let owner = '', repo = '', branch = 'main', path = 'content.json';
 
 const $ = id => document.getElementById(id);
@@ -299,10 +313,7 @@ function field(labelText, value, oninput, tag = 'input', options) {
   let input;
   if (tag === 'select' && options) {
     input = document.createElement('select');
-    for (const o of options()) {
-      const opt = el('option', {value: o.v}, [document.createTextNode(o.t)]);
-      input.appendChild(opt);
-    }
+    for (const o of options()) input.appendChild(el('option', {value:o.v}, [document.createTextNode(o.t)]));
   } else input = document.createElement(tag);
   input.value = value ?? '';
   input.oninput = oninput;
@@ -317,23 +328,21 @@ function trField(labelText, obj, key) {
 }
 function toast(msg, kind = '') {
   const t = $('toast'); t.textContent = msg; t.className = 'toast ' + kind; t.style.display = 'block';
-  clearTimeout(t._h); t._h = setTimeout(() => t.style.display = 'none', 2800);
+  clearTimeout(t._h); t._h = setTimeout(() => t.style.display = 'none', 3200);
 }
 function toggleSec(id) { $(id).classList.toggle('open'); }
-function setStatus(s, kind = '') { const el2 = $('status'); el2.textContent = s; el2.className = 'status ' + kind; }
+function setStatus(s, kind = '') { const n = $('status'); n.textContent = s; n.className = 'status ' + kind; }
 function refreshCounts() {
-  $('worksCount').textContent = data?.works?.length + ' مورد';
-  $('skillsCount').textContent = data?.skills?.length + ' مورد';
-  $('collabsCount').textContent = data?.collabs?.length + ' مورد';
-  $('servicesCount').textContent = data?.services?.length + ' مورد';
-  $('contactsCount').textContent = data?.contacts?.length + ' مورد';
+  $('worksCount').textContent = data.works.length + ' مورد';
+  $('skillsCount').textContent = data.skills.length + ' مورد';
+  $('collabsCount').textContent = data.collabs.length + ' مورد';
+  $('servicesCount').textContent = data.services.length + ' مورد';
+  $('contactsCount').textContent = data.contacts.length + ' مورد';
 }
-// staggered entrance for item cards
 function stagger(container) {
-  [...container.querySelectorAll('.item')].forEach((n, i) => {
-    n.style.animationDelay = (i * 45) + 'ms';
-  });
+  [...container.querySelectorAll('.item')].forEach((n, i) => n.style.animationDelay = (i * 45) + 'ms');
 }
+function hideEmpty(){ $('empty').classList.remove('show'); }
 
 function loadSettings() {
   owner = localStorage.getItem('hojat-owner') || 'AmirAslami';
@@ -351,11 +360,12 @@ function saveSettings() {
   localStorage.setItem('hojat-repo', repo);
   localStorage.setItem('hojat-token', $('tok').value.trim());
 }
-function skeleton(show) { $('skeleton').classList.toggle('show', show); }
+function skeleton(show, text) { if (text) $('skeletonText').textContent = text; $('skeleton').classList.toggle('show', show); }
+function pagesBase(){ return `https://${(owner||'').toLowerCase()}.github.io/${repo}`; }
 
 function apiHeaders() {
   const tok = $('tok').value.trim();
-  if (!tok) { toast('اول توکن گیت‌هاب را وارد کن', 'err'); throw new Error('no token'); }
+  if (!tok) { toast('برای ذخیره/آپلود، توکن گیت‌هاب لازم است — در بالا وارد کن', 'err'); throw new Error('no token'); }
   return { 'Authorization': 'Bearer ' + tok, 'Accept': 'application/vnd.github+json' };
 }
 async function ghFetch(url, options) {
@@ -369,46 +379,44 @@ async function ghFetch(url, options) {
 async function loadFromGithub() {
   saveSettings();
   if (!owner || !repo) { toast('نام ریپو را وارد کن', 'err'); return; }
-  skeleton(true);
+  skeleton(true, 'در حال ارتباط با گیت‌هاب…');
   try {
     const res = await ghFetch(`https://api.github.com/repos/${owner}/${repo}/contents/${path}?ref=${branch}`, { headers: apiHeaders() });
     const json = await res.json();
     fileSha = json.sha;
     data = JSON.parse(atob(json.content.replace(/\n/g, '')));
-    $('empty').classList.remove('show');
-    renderAll();
+    for (const k of ['works','skills','collabs','services','contacts']) if (!Array.isArray(data[k])) data[k] = [];
+    hideEmpty(); renderAll();
     setStatus(`بارگذاری شد • ${new Date().toLocaleTimeString('fa-IR')}`, 'ok');
     toast('محتوا از گیت‌هاب بارگذاری شد ✓', 'ok');
   } catch (e) {
     setStatus('', '');
-    $('empty').classList.add('show');
-    toast('خطا در بارگذاری: ' + e.message, 'err');
+    toast('خطا در بارگذاری: ' + e.message + ' (می‌توانی بدون بارگذاری هم شروع کنی)', 'err');
   } finally { skeleton(false); }
 }
-async function saveToGithub() {
-  if (!data) { toast('اول محتوا را بارگذاری کن', 'err'); return; }
-  saveSettings();
-  if (!owner || !repo) { toast('نام ریپو را وارد کن', 'err'); return; }
-  let text;
-  try { text = JSON.stringify(data, null, 2) + '\n'; } catch { toast('خطا در ساخت JSON', 'err'); return; }
-  const btn = $('saveBtn');
-  btn.disabled = true; btn.classList.add('saving'); btn.textContent = '⏳ در حال ذخیره…';
-  skeleton(true);
+async function commitContent(msg) {
+  const text = JSON.stringify(data, null, 2) + '\n';
+  let sha = null;
   try {
     const meta = await ghFetch(`https://api.github.com/repos/${owner}/${repo}/contents/${path}?ref=${branch}`, { headers: apiHeaders() });
-    const sha = (await meta.json()).sha;
-    await ghFetch(`https://api.github.com/repos/${owner}/${repo}/contents/${path}`, {
-      method: 'PUT',
-      headers: apiHeaders(),
-      body: JSON.stringify({
-        message: 'آپدیت محتوا از پنل — ' + new Date().toLocaleString('fa-IR'),
-        content: btoa(unescape(encodeURIComponent(text))),
-        sha, branch,
-      }),
-    });
-    fileSha = sha;
+    sha = (await meta.json()).sha;
+  } catch { /* file may not exist yet */ }
+  await ghFetch(`https://api.github.com/repos/${owner}/${repo}/contents/${path}`, {
+    method: 'PUT', headers: apiHeaders(),
+    body: JSON.stringify({ message: msg, content: btoa(unescape(encodeURIComponent(text))), sha, branch }),
+  });
+  fileSha = sha;
+}
+async function saveToGithub(silent = false) {
+  saveSettings();
+  if (!owner || !repo) { toast('نام ریپو را وارد کن', 'err'); return; }
+  const btn = $('saveBtn');
+  btn.disabled = true; btn.classList.add('saving'); btn.textContent = '⏳ در حال ذخیره…';
+  if (!silent) skeleton(true, 'در حال ذخیره محتوا…');
+  try {
+    await commitContent('آپدیت محتوا از پنل — ' + new Date().toLocaleString('fa-IR'));
     setStatus('ذخیره شد ✓ ' + new Date().toLocaleTimeString('fa-IR'), 'ok');
-    toast('ذخیره شد! اپ حداکثر تا ۳۰ ثانیه بعد به‌روز می‌شود ✓', 'ok');
+    if (!silent) toast('ذخیره شد! اپ حداکثر تا ۳۰ ثانیه بعد به‌روز می‌شود ✓', 'ok');
   } catch (e) {
     setStatus('', '');
     toast('خطا در ذخیره: ' + e.message, 'err');
@@ -421,24 +429,95 @@ function loadFromFile(input) {
   const f = input.files[0]; if (!f) return;
   const reader = new FileReader();
   reader.onload = () => {
-    try { data = JSON.parse(reader.result); fileSha = null; $('empty').classList.remove('show'); renderAll(); toast('فایل بارگذاری شد ✓', 'ok'); }
+    try { data = JSON.parse(reader.result); for (const k of ['works','skills','collabs','services','contacts']) if (!Array.isArray(data[k])) data[k] = []; fileSha = null; hideEmpty(); renderAll(); toast('فایل بارگذاری شد ✓', 'ok'); }
     catch { toast('فایل JSON معتبر نیست', 'err'); }
   };
   reader.readAsText(f);
 }
 function downloadFile() {
-  if (!data) { toast('محتوا خالی است', 'err'); return; }
   const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
   const a = document.createElement('a');
   a.href = URL.createObjectURL(blob); a.download = 'content.json'; a.click();
 }
 
+// ---------------- media upload ----------------
+let pendingUpload = null;
+function pickMedia(i, kind, accept) {
+  const inp = $('mediaInput');
+  inp.accept = accept;
+  pendingUpload = { i, kind };
+  inp.click();
+}
+$('mediaInput').addEventListener('change', e => {
+  const f = e.target.files[0];
+  e.target.value = '';
+  if (f && pendingUpload) uploadMedia(pendingUpload.i, pendingUpload.kind, f);
+  pendingUpload = null;
+});
+function fileToB64(file) {
+  return new Promise((resolve, reject) => {
+    const r = new FileReader();
+    r.onload = () => resolve(r.result.split(',')[1]);
+    r.onerror = reject;
+    r.readAsDataURL(file);
+  });
+}
+async function uploadMedia(i, kind, file) {
+  const w = data.works[i]; if (!w) return;
+  const isVideo = kind === 'video';
+  if (isVideo && file.size > 90 * 1024 * 1024) { toast('ویدیو بزرگ‌تر از حد گیت‌هاب است (حداکثر ~۹۰MB) — ویدیوهای بلند را در یوتیوب بگذار و لینکش را در فیلد «لینک ویدیو» بنویس', 'err'); return; }
+  if (isVideo && file.size > 25 * 1024 * 1024) toast('ویدیو کمی سنگین است؛ روی اینترنت موبایل ممکن است کند باز شود', '');
+  skeleton(true, isVideo ? 'در حال آپلود ویدیو…' : 'در حال آپلود عکس…');
+  try {
+    const ext = ((file.name.split('.').pop() || '').toLowerCase() || (isVideo ? 'mp4' : 'jpg'));
+    const mediaPath = `media/${w.id}/${isVideo ? 'video' : 'thumb'}.${ext}`;
+    let sha = null;
+    try {
+      const meta = await ghFetch(`https://api.github.com/repos/${owner}/${repo}/contents/${mediaPath}?ref=${branch}`, { headers: apiHeaders() });
+      sha = (await meta.json()).sha;
+    } catch { /* new file */ }
+    const b64 = await fileToB64(file);
+    await ghFetch(`https://api.github.com/repos/${owner}/${repo}/contents/${mediaPath}`, {
+      method: 'PUT', headers: apiHeaders(),
+      body: JSON.stringify({
+        message: `آپلود ${isVideo ? 'ویدیو' : 'کاور'} برای «${w.title?.fa || w.id}»`,
+        content: b64, sha, branch,
+      }),
+    });
+    const url = `${pagesBase()}/${mediaPath}`;
+    if (isVideo) { w.videoUrl = url; w.url = null; } else { w.thumbUrl = url; }
+    renderWorks(); stagger($('works'));
+    await saveToGithub(true); // auto-commit content.json so the app sees it right away
+    toast((isVideo ? '🎬 ویدیو' : '🖼 کاور') + ' آپلود و ذخیره شد — اپ تا ۳۰ ثانیه بعد نشان می‌دهد ✓', 'ok');
+  } catch (e) {
+    toast('خطا در آپلود: ' + e.message, 'err');
+  } finally { skeleton(false); }
+}
+function clearMedia(i, kind) {
+  const w = data.works[i]; if (!w) return;
+  if (kind === 'video') w.videoUrl = null; else w.thumbUrl = null;
+  renderWorks(); stagger($('works'));
+  toast('از محتوا حذف شد — برای اعمال، ذخیره بزن', '');
+}
+
+// ---------------- renderers ----------------
 function renderAll() {
   renderWorks(); renderSkills(); renderCollabs(); renderServices(); renderContacts();
   refreshCounts();
   stagger($('works')); stagger($('skills')); stagger($('collabs')); stagger($('services')); stagger($('contacts'));
 }
-
+function mediaStrip(w, i) {
+  const strip = el('div', {class:'media-strip'});
+  if (w.thumbUrl) strip.appendChild(el('img', {class:'thumb-preview', src: w.thumbUrl, alt:'کاور'}));
+  strip.appendChild(el('button', {class:'b-media', onclick:() => pickMedia(i, 'thumb', 'image/*')}, [document.createTextNode('🖼 آپلود عکس کاور')]));
+  strip.appendChild(el('button', {class:'b-media', onclick:() => pickMedia(i, 'video', 'video/*')}, [document.createTextNode('🎥 آپلود ویدیو')]));
+  if (w.thumbUrl) strip.appendChild(el('span', {class:'badge-ok'}, [document.createTextNode('✓ کاور آپلود شد')]));
+  if (w.videoUrl) strip.appendChild(el('span', {class:'badge-ok'}, [document.createTextNode('✓ ویدیو آپلود شد')]));
+  if (w.videoUrl) strip.appendChild(el('button', {class:'badge-clear', onclick:() => clearMedia(i, 'video')}, [document.createTextNode('✕ حذف ویدیو')]));
+  if (w.thumbUrl) strip.appendChild(el('button', {class:'badge-clear', onclick:() => clearMedia(i, 'thumb')}, [document.createTextNode('✕ حذف کاور')]));
+  strip.appendChild(el('span', {class:'up-note'}, [document.createTextNode('ویدیو ≤۹۰MB — برای ویدیوی بلند، لینک یوتیوب بهتر است')]));
+  return strip;
+}
 function renderWorks() {
   const box = $('works'); box.innerHTML = '';
   data.works.forEach((w, i) => {
@@ -447,12 +526,13 @@ function renderWorks() {
       el('b', {}, [document.createTextNode(w.title?.fa || '(بدون عنوان)')]),
       el('button', {class:'b-danger', onclick:() => { if (confirm('حذف شود؟')) { data.works.splice(i, 1); renderAll(); } }}, [document.createTextNode('حذف')]),
     ]));
+    item.appendChild(mediaStrip(w, i));
     item.appendChild(trField('عنوان', w, 'title'));
     item.appendChild(trField('توضیح کوتاه', w, 'desc'));
     item.appendChild(trField('توضیح کامل صفحه جزئیات', w, 'detail'));
     item.appendChild(trField('نقش', w, 'role'));
     const r2 = el('div', {class:'row'});
-    r2.appendChild(field('لینک ویدیو (یوتیوب/اینستا)', w.url || '', e => w.url = e.target.value || null));
+    r2.appendChild(field('لینک ویدیو (یوتیوب/اینستا — جایگزین ویدیوی آپلودی)', w.url || '', e => w.url = e.target.value || null));
     r2.appendChild(field('مدت (مثل 0:40)', w.duration, e => w.duration = e.target.value));
     const r3 = el('div', {class:'row'});
     r3.appendChild(field('دسته', w.category, e => w.category = e.target.value, 'select', () => CATS.map(c => ({v:c, t:c}))));
@@ -527,6 +607,7 @@ function renderContacts() {
 
 function blankTr(fa = '', en = '') { return {fa, en}; }
 function addWork() {
+  hideEmpty();
   data.works.push({
     id: 'work-' + Date.now(),
     title: blankTr('نمونه‌کار جدید', 'New work'),
@@ -535,21 +616,22 @@ function addWork() {
     detail: blankTr('توضیح کامل…', 'Full description…'),
     tools: ['Premiere Pro'],
     role: blankTr('تدوینگر', 'Editor'),
-    url: null, icon: 'play_circle',
+    url: null, thumbUrl: null, videoUrl: null,
+    icon: 'play_circle',
     gradient: ['#e8552e', '#7a2d8f'],
     duration: '0:30',
   });
   renderAll(); $('sec-works').classList.add('open');
+  toast('نمونه‌کار اضافه شد — کاور و ویدیو را همین‌جا آپلود کن', '');
 }
-function addSkill() { data.skills.push({name: blankTr('مهارت جدید', 'New skill'), value: 70}); renderAll(); $('sec-skills').classList.add('open'); }
-function addCollab() { data.collabs.push({name: blankTr('همکاری جدید', 'New collab'), desc: blankTr('توضیح…', 'Description…'), period: null}); renderAll(); $('sec-collabs').classList.add('open'); }
-function addService() { data.services.push({title: blankTr('خدمت جدید', 'New service'), desc: blankTr('توضیح…', 'Description…'), icon: 'movie'}); renderAll(); $('sec-services').classList.add('open'); }
-function addContact() { data.contacts.push({type: 'telegram', label: 'Telegram', value: '@', url: ''}); renderAll(); $('sec-contacts').classList.add('open'); }
+function addSkill() { hideEmpty(); data.skills.push({name: blankTr('مهارت جدید', 'New skill'), value: 70}); renderAll(); $('sec-skills').classList.add('open'); }
+function addCollab() { hideEmpty(); data.collabs.push({name: blankTr('همکاری جدید', 'New collab'), desc: blankTr('توضیح…', 'Description…'), period: null}); renderAll(); $('sec-collabs').classList.add('open'); }
+function addService() { hideEmpty(); data.services.push({title: blankTr('خدمت جدید', 'New service'), desc: blankTr('توضیح…', 'Description…'), icon: 'movie'}); renderAll(); $('sec-services').classList.add('open'); }
+function addContact() { hideEmpty(); data.contacts.push({type: 'telegram', label: 'Telegram', value: '@', url: ''}); renderAll(); $('sec-contacts').classList.add('open'); }
 
 loadSettings();
 $('repo').addEventListener('change', saveSettings);
 $('tok').addEventListener('change', saveSettings);
-// auto-load if token was saved before
 if (localStorage.getItem('hojat-token')) loadFromGithub();
 </script>
 </body>
