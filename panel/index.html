@@ -380,6 +380,16 @@ async function ghFetch(url, options) {
   }
   return res;
 }
+// decode base64 → UTF-8 text correctly (atob alone corrupts Persian!)
+function b64ToUtf8(b64) {
+  const bin = atob(b64.replace(/\n/g, ''));
+  const bytes = new Uint8Array(bin.length);
+  for (let i = 0; i < bin.length; i++) bytes[i] = bin.charCodeAt(i);
+  return new TextDecoder('utf-8').decode(bytes);
+}
+
+let loadedFromGithub = false;
+
 async function loadFromGithub() {
   saveSettings();
   if (!owner || !repo) { toast('نام ریپو را وارد کن', 'err'); return; }
@@ -388,9 +398,10 @@ async function loadFromGithub() {
     const res = await ghFetch(`https://api.github.com/repos/${owner}/${repo}/contents/${path}?ref=${branch}`, { headers: apiHeaders() });
     const json = await res.json();
     fileSha = json.sha;
-    data = JSON.parse(atob(json.content.replace(/\n/g, '')));
+    data = JSON.parse(b64ToUtf8(json.content));
     if (!data.texts || typeof data.texts !== 'object') data.texts = {fa:{}, en:{}};
     for (const k of ['works','skills','collabs','services','contacts']) if (!Array.isArray(data[k])) data[k] = [];
+    loadedFromGithub = true;
     hideEmpty(); renderAll();
     setStatus(`بارگذاری شد • ${new Date().toLocaleTimeString('fa-IR')}`, 'ok');
     toast('محتوا از گیت‌هاب بارگذاری شد ✓', 'ok');
@@ -430,6 +441,10 @@ async function commitContent(msg) {
 async function saveToGithub(silent = false) {
   saveSettings();
   if (!owner || !repo) { toast('نام ریپو را وارد کن', 'err'); return; }
+  // safety: never silently overwrite GitHub content that was never loaded
+  if (!loadedFromGithub && !silent) {
+    if (!confirm('محتوای گیت‌هاب هنوز بارگذاری نشده. اگر ذخیره کنی، ممکن است تغییرات قبلی بازنویسی شوند. اول «بارگذاری» بزن، یا ادامه بده؟')) return;
+  }
   const btn = $('saveBtn');
   btn.disabled = true; btn.classList.add('saving'); btn.textContent = '⏳ در حال ذخیره…';
   if (!silent) skeleton(true, 'در حال ذخیره محتوا…');
