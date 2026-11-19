@@ -10,10 +10,10 @@
 @font-face{font-family:'Vazirmatn';src:url('fonts/Vazirmatn-ExtraBold.ttf') format('truetype');font-weight:800;font-display:swap}
 
 :root{
-  --bg:#0a0e17; --bg2:#0d1220; --surface:#141c2d; --surface2:#1b2438;
+  --bg:#0a0e17; --bg2:#0d1220; --surface:#141c2d; --surface2:#1b2438; --hover:#20293f;
   --text:#f2f0eb; --muted:#a8aebf; --line:#263049;
-  --accent:#e8552e; --accent2:#f78c3f; --ok:#0f9d76; --err:#ef4444;
-  --radius:18px;
+  --accent:#e8552e; --accent2:#f78c3f; --ok:#0f9d76; --warn:#f7b26f; --err:#ef4444;
+  --radius:16px;
 }
 *{box-sizing:border-box;margin:0;padding:0}
 ::selection{background:var(--accent);color:#fff}
@@ -21,284 +21,338 @@
 ::-webkit-scrollbar-track{background:var(--bg2)}
 ::-webkit-scrollbar-thumb{background:linear-gradient(var(--accent),var(--accent2));border-radius:99px}
 
-body{
-  font-family:'Vazirmatn',Tahoma,sans-serif;background:var(--bg);color:var(--text);
-  line-height:1.8;font-size:14px;overflow-x:hidden;
-}
+body{font-family:'Vazirmatn',Tahoma,sans-serif;background:var(--bg);color:var(--text);font-size:14px;line-height:1.8;overflow:hidden;height:100vh}
 
-.bg-glow{position:fixed;border-radius:50%;filter:blur(90px);opacity:.35;pointer-events:none;z-index:0}
-.glow1{width:420px;height:420px;background:var(--accent);top:-120px;right:-100px;animation:drift1 14s ease-in-out infinite alternate}
-.glow2{width:340px;height:340px;background:#7c3aed;bottom:-100px;left:-80px;animation:drift2 18s ease-in-out infinite alternate}
-@keyframes drift1{from{transform:translate(0,0) scale(1)}to{transform:translate(-60px,50px) scale(1.15)}}
-@keyframes drift2{from{transform:translate(0,0) scale(1.1)}to{transform:translate(70px,-45px) scale(.95)}}
+/* ================= layout ================= */
+.app{display:flex;height:100vh}
 
-header{
-  position:relative;z-index:2;padding:26px 22px 18px;overflow:hidden;
-  background:linear-gradient(135deg,#0a0e17 0%,#141c2d 55%,#3a1c10 100%);
-  border-bottom:1px solid var(--line);
+/* ---------- sidebar ---------- */
+.sidebar{
+  width:236px;flex:none;background:var(--bg2);border-left:1px solid var(--line);
+  display:flex;flex-direction:column;z-index:30;
 }
-header::after{content:'';position:absolute;inset:0;pointer-events:none;
-  background:radial-gradient(500px 200px at 85% 0%,rgba(232,85,46,.35),transparent 60%),
-             radial-gradient(400px 160px at 10% 100%,rgba(247,140,63,.2),transparent 60%);
+.brand{
+  padding:20px 18px 16px;border-bottom:1px solid var(--line);
+  display:flex;align-items:baseline;gap:2px;
 }
-header>*{position:relative;z-index:1}
-.logo{display:flex;align-items:baseline;gap:2px;animation:popIn .7s cubic-bezier(.34,1.56,.64,1) both}
-.logo h1{font-size:26px;font-weight:800;letter-spacing:.3em;color:#fff}
-.logo h1 b{color:var(--accent)}
-.logo small{color:var(--muted);font-size:12px;margin-right:10px;letter-spacing:0}
-.bar{
-  display:flex;gap:8px;align-items:center;margin-top:16px;flex-wrap:wrap;
-  animation:fadeUp .6s .15s ease both;
+.brand h1{font-size:20px;font-weight:800;letter-spacing:.25em}
+.brand h1 b{color:var(--accent)}
+.brand small{color:var(--muted);font-size:10px;margin-right:8px}
+nav{flex:1;padding:12px 10px;overflow-y:auto}
+.nav-item{
+  display:flex;align-items:center;gap:11px;width:100%;text-align:right;
+  background:none;border:none;color:var(--muted);cursor:pointer;
+  padding:10px 13px;border-radius:12px;font-family:inherit;font-size:13.5px;font-weight:700;
+  margin-bottom:3px;transition:background .2s,color .2s,padding .2s;position:relative;
 }
-.bar input{
-  background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.16);color:#fff;
-  border-radius:12px;padding:9px 12px;font-family:inherit;font-size:12.5px;
-  transition:border-color .25s, box-shadow .25s, background .25s;
+.nav-item .ic{font-size:16px;width:22px;text-align:center;transition:transform .25s cubic-bezier(.34,1.56,.64,1)}
+.nav-item:hover{background:var(--surface);color:var(--text);padding-right:16px}
+.nav-item:hover .ic{transform:scale(1.15)}
+.nav-item.active{
+  background:linear-gradient(135deg,rgba(232,85,46,.18),rgba(247,140,63,.10));
+  color:#fff;border:1px solid rgba(232,85,46,.35);padding-right:15px;
 }
-.bar input::placeholder{color:#7d879e}
-.bar input:focus{outline:none;border-color:var(--accent);box-shadow:0 0 0 3px rgba(232,85,46,.18);background:rgba(255,255,255,.1)}
-.bar input.repo{width:230px}
-.bar input.tok{width:280px}
+.nav-item.active::before{
+  content:'';position:absolute;right:-10px;top:20%;height:60%;width:3px;
+  background:linear-gradient(var(--accent),var(--accent2));border-radius:99px;
+}
+.nav-item .badge{margin-right:auto;background:var(--surface2);color:var(--muted);font-size:10.5px;border-radius:99px;padding:1px 8px}
+.nav-item.active .badge{background:rgba(232,85,46,.25);color:var(--accent2)}
+.side-foot{padding:14px 16px;border-top:1px solid var(--line);font-size:10.5px;color:var(--muted)}
+.side-foot .repo-line{display:flex;align-items:center;gap:7px}
+.side-foot .dot{width:8px;height:8px;border-radius:50%;background:var(--muted);flex:none;transition:background .3s,box-shadow .3s}
+.side-foot .dot.ok{background:var(--ok);box-shadow:0 0 8px rgba(15,157,118,.6)}
+.side-foot .dot.err{background:var(--err)}
 
-button{
-  font-family:inherit;cursor:pointer;border:none;border-radius:14px;
-  padding:10px 18px;font-size:13px;font-weight:700;color:#fff;
-  position:relative;transition:transform .15s ease, box-shadow .25s, background .25s, opacity .2s;
+/* ---------- main ---------- */
+.main{flex:1;display:flex;flex-direction:column;min-width:0}
+.topbar{
+  height:62px;flex:none;display:flex;align-items:center;gap:12px;padding:0 22px;
+  background:rgba(13,18,32,.8);backdrop-filter:blur(12px);border-bottom:1px solid var(--line);z-index:20;
 }
-button:active{transform:scale(.95)}
+.topbar h1{font-size:16.5px;font-weight:800;animation:fadeUp .3s ease both}
+.topbar .spacer{flex:1}
+.conn-badge{
+  display:flex;align-items:center;gap:7px;font-size:11.5px;color:var(--muted);
+  background:var(--surface);border:1px solid var(--line);border-radius:99px;padding:6px 13px;
+  transition:border-color .3s,color .3s;
+}
+.conn-badge.ok{color:var(--ok);border-color:rgba(15,157,118,.4)}
+.conn-badge.err{color:#f87171;border-color:rgba(239,68,68,.4)}
+.conn-badge .dot{width:7px;height:7px;border-radius:50%;background:currentColor}
+
+.content{flex:1;overflow-y:auto;padding:22px;position:relative}
+.view{animation:fadeUp .35s ease both;max-width:1060px;margin:0 auto}
+
+/* ---------- cards & stats ---------- */
+.stat-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:14px;margin-bottom:20px}
+.stat-card{
+  background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);
+  padding:16px 18px;display:flex;align-items:center;gap:14px;
+  transition:transform .25s,border-color .25s,box-shadow .25s;
+  animation:fadeUp .4s ease both;
+}
+.stat-card:hover{transform:translateY(-3px);border-color:#34405c;box-shadow:0 8px 24px rgba(0,0,0,.35)}
+.stat-card .ic{
+  width:44px;height:44px;border-radius:13px;display:flex;align-items:center;justify-content:center;
+  font-size:20px;flex:none;
+}
+.stat-card .ic.orange{background:rgba(232,85,46,.15);color:var(--accent2)}
+.stat-card .ic.violet{background:rgba(124,58,237,.15);color:#c4b5fd}
+.stat-card .ic.green{background:rgba(15,157,118,.15);color:#34d399}
+.stat-card .ic.blue{background:rgba(43,92,255,.15);color:#93b0ff}
+.stat-card .num{font-size:24px;font-weight:800;line-height:1.2}
+.stat-card .lbl{font-size:11.5px;color:var(--muted)}
+
+.card{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);padding:16px 18px;margin-bottom:14px;animation:fadeUp .35s ease both}
+.card h3{font-size:14px;margin-bottom:10px}
+
+/* ---------- buttons ---------- */
+button{font-family:inherit;cursor:pointer;border:none;border-radius:12px;padding:9px 16px;font-size:13px;font-weight:700;color:#fff;transition:transform .15s,box-shadow .25s,background .25s,opacity .2s,border-color .25s}
+button:active{transform:scale(.96)}
 button:disabled{opacity:.5;cursor:wait}
-.b-primary{background:linear-gradient(135deg,var(--accent),var(--accent2));box-shadow:0 4px 16px rgba(232,85,46,.35)}
-.b-primary:hover{box-shadow:0 6px 22px rgba(232,85,46,.55);transform:translateY(-1px)}
-.b-ghost{background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.2);backdrop-filter:blur(6px)}
-.b-ghost:hover{background:rgba(255,255,255,.16);border-color:rgba(255,255,255,.4)}
-.b-soft{background:var(--surface2);color:var(--text);border:1px solid var(--line)}
-.b-soft:hover{border-color:var(--accent);color:var(--accent2)}
-.b-danger{background:none;color:#f87171;border:1px solid rgba(239,68,68,.45);padding:6px 14px;font-size:12px;border-radius:11px}
-.b-danger:hover{background:rgba(239,68,68,.12);border-color:#f87171}
-.b-media{background:rgba(232,85,46,.12);color:var(--accent2);border:1px solid rgba(232,85,46,.4);padding:7px 14px;font-size:12px;border-radius:11px}
-.b-media:hover{background:rgba(232,85,46,.22)}
-.b-ok{background:linear-gradient(135deg,var(--ok),#16c79a);box-shadow:0 4px 18px rgba(15,157,118,.4);padding:12px 30px}
-.b-ok:hover{box-shadow:0 6px 26px rgba(15,157,118,.6);transform:translateY(-1px)}
+.b-primary{background:linear-gradient(135deg,var(--accent),var(--accent2));box-shadow:0 4px 14px rgba(232,85,46,.3)}
+.b-primary:hover{box-shadow:0 6px 20px rgba(232,85,46,.5);transform:translateY(-1px)}
+.b-ghost{background:var(--surface2);color:var(--text);border:1px solid var(--line)}
+.b-ghost:hover{border-color:var(--accent);color:var(--accent2)}
+.b-soft{background:rgba(232,85,46,.1);color:var(--accent2);border:1px solid rgba(232,85,46,.3);font-size:12px;padding:7px 13px}
+.b-soft:hover{background:rgba(232,85,46,.2)}
+.b-danger{background:none;color:#f87171;border:1px solid rgba(239,68,68,.4);padding:6px 13px;font-size:12px;border-radius:11px}
+.b-danger:hover{background:rgba(239,68,68,.12)}
+.b-ok{background:linear-gradient(135deg,var(--ok),#16c79a);box-shadow:0 4px 16px rgba(15,157,118,.35);padding:10px 24px}
+.b-ok:hover{transform:translateY(-1px);box-shadow:0 6px 22px rgba(15,157,118,.55)}
 .b-ok.saving{animation:pulse 1.2s ease-in-out infinite}
 @keyframes pulse{0%,100%{box-shadow:0 0 0 0 rgba(15,157,118,.45)}50%{box-shadow:0 0 0 12px rgba(15,157,118,0)}}
 
-main{position:relative;z-index:1;max-width:900px;margin:0 auto;padding:10px 16px 90px}
-.hint{
-  font-size:12px;color:var(--muted);background:var(--surface);border:1px solid var(--line);
-  border-radius:14px;padding:10px 14px;margin-top:14px;display:flex;gap:10px;align-items:center;
-  animation:fadeUp .6s .25s ease both;
+/* ---------- toolbar / rows ---------- */
+.toolbar{display:flex;gap:10px;align-items:center;margin-bottom:16px;flex-wrap:wrap}
+.toolbar .spacer{flex:1}
+.row-item{
+  display:flex;align-items:center;gap:12px;background:var(--surface);
+  border:1px solid var(--line);border-radius:14px;padding:12px 15px;margin-bottom:10px;
+  transition:border-color .25s,box-shadow .25s,transform .2s;animation:fadeUp .35s ease both;
 }
-.hint .dot{width:8px;height:8px;border-radius:50%;background:var(--accent2);flex:none;animation:blink 2s infinite}
-@keyframes blink{0%,100%{opacity:1}50%{opacity:.3}}
+.row-item:hover{border-color:#3a4665;box-shadow:0 4px 16px rgba(0,0,0,.3);transform:translateY(-2px)}
+.row-item .grow{flex:1;min-width:0}
+.row-item .title{font-size:13.5px;font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.row-item .sub{font-size:11.5px;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.row-item .actions{display:flex;gap:7px;flex:none;opacity:.85}
+.thumb-s{width:58px;height:40px;border-radius:9px;object-fit:cover;border:1px solid var(--line);flex:none}
+.thumb-ph{width:58px;height:40px;border-radius:9px;flex:none;display:flex;align-items:center;justify-content:center;font-size:18px;color:#fff}
 
-section{
-  background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);
-  margin-top:16px;overflow:hidden;
-  transition:border-color .3s, box-shadow .3s, transform .3s;
-  animation:fadeUp .55s ease both;
-}
-section:hover{border-color:#34405c}
-section.open{box-shadow:0 8px 30px rgba(0,0,0,.35)}
-.sec-head{display:flex;align-items:center;gap:10px;padding:14px 18px;background:var(--surface2);cursor:pointer;user-select:none}
-.sec-head:hover{background:#20293f}
-.sec-head .emoji{font-size:18px;transition:transform .3s cubic-bezier(.34,1.56,.64,1)}
-section.open .sec-head .emoji{transform:scale(1.15) rotate(-6deg)}
-.sec-head h2{font-size:15px;font-weight:700;flex:1}
-.sec-head .count{
-  color:var(--muted);font-size:11.5px;background:var(--bg);border:1px solid var(--line);
-  border-radius:99px;padding:2px 10px;transition:color .3s,border-color .3s;
-}
-section.open .sec-head .count{color:var(--accent2);border-color:rgba(232,85,46,.4)}
-.sec-head .chev{transition:transform .35s cubic-bezier(.34,1.56,.64,1);color:var(--muted);font-size:12px}
-section.open .sec-head .chev{transform:rotate(180deg);color:var(--accent2)}
+.badge{display:inline-flex;align-items:center;gap:4px;font-size:10.5px;border-radius:99px;padding:2px 9px;flex:none}
+.badge.cat{background:rgba(43,92,255,.14);color:#93b0ff;border:1px solid rgba(43,92,255,.3)}
+.badge.ok{background:rgba(15,157,118,.1);color:#34d399;border:1px solid rgba(15,157,118,.35)}
+.badge.warn{background:rgba(247,178,111,.1);color:var(--warn);border:1px solid rgba(247,178,111,.35)}
+.badge.type{background:var(--surface2);color:var(--muted);border:1px solid var(--line)}
 
-.sec-body{display:grid;grid-template-rows:0fr;transition:grid-template-rows .4s cubic-bezier(.4,0,.2,1)}
-section.open .sec-body{grid-template-rows:1fr}
-.sec-body-in{overflow:hidden;padding:0 16px;transition:padding .4s}
-section.open .sec-body-in{padding:12px 16px}
+.pbar{height:7px;border-radius:99px;background:var(--surface2);overflow:hidden;flex:1}
+.pbar i{display:block;height:100%;background:linear-gradient(90deg,var(--accent),var(--accent2));border-radius:99px;transition:width 1s cubic-bezier(.4,0,.2,1)}
 
-.item{
-  border:1px solid var(--line);border-radius:14px;padding:13px;margin-bottom:10px;
-  background:var(--bg2);
-  transition:border-color .25s, box-shadow .25s, transform .25s;
-  animation:fadeUp .45s ease both;
-}
-.item:hover{border-color:#3a4665;box-shadow:0 4px 18px rgba(0,0,0,.3);transform:translateY(-2px)}
-.item-head{display:flex;align-items:center;gap:8px;margin-bottom:9px}
-.item-head b{flex:1;font-size:14px}
-.item-head b::before{content:'●';color:var(--accent);font-size:9px;margin-left:8px}
-
-.media-strip{
-  display:flex;gap:10px;align-items:center;flex-wrap:wrap;
-  background:rgba(232,85,46,.05);border:1px dashed rgba(232,85,46,.35);
-  border-radius:12px;padding:9px 11px;margin-bottom:9px;
-}
-.thumb-preview{
-  width:64px;height:42px;border-radius:8px;object-fit:cover;
-  border:1px solid var(--line);background:var(--surface);
-}
-.badge-ok{
-  font-size:11px;color:var(--ok);border:1px solid rgba(15,157,118,.45);
-  border-radius:99px;padding:3px 11px;background:rgba(15,157,118,.08);
-  animation:popIn .4s cubic-bezier(.34,1.56,.64,1) both;
-}
-.badge-clear{
-  background:none;border:none;color:var(--muted);font-size:11px;padding:3px 8px;border-radius:99px;
-}
-.badge-clear:hover{color:#f87171}
-.up-note{font-size:10.5px;color:var(--muted)}
-
-.row{display:flex;gap:9px;flex-wrap:wrap;margin-bottom:8px}
+/* ---------- fields ---------- */
+.row{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:9px}
 .field{flex:1;min-width:180px}
-.field label{display:block;font-size:11px;color:var(--muted);margin-bottom:4px;transition:color .25s}
+.field label{display:block;font-size:11px;color:var(--muted);margin-bottom:4px;transition:color .2s}
 .field:focus-within label{color:var(--accent2)}
 .field input,.field textarea,.field select{
   width:100%;border:1px solid var(--line);border-radius:11px;padding:8px 11px;
-  font-family:inherit;font-size:13px;background:var(--surface);color:var(--text);
-  transition:border-color .25s, box-shadow .25s;
+  font-family:inherit;font-size:13px;background:var(--bg2);color:var(--text);
+  transition:border-color .25s,box-shadow .25s;
 }
-.field select{cursor:pointer}
-.field select option{background:var(--surface)}
-.field textarea{min-height:64px;resize:vertical}
-.field input:focus,.field textarea:focus,.field select:focus{
-  outline:none;border-color:var(--accent);box-shadow:0 0 0 3px rgba(232,85,46,.15);
-}
-.toolbar{display:flex;gap:8px;margin-top:12px;flex-wrap:wrap}
+.field select{cursor:pointer}.field select option{background:var(--surface)}
+.field textarea{min-height:58px;resize:vertical}
+.field input:focus,.field textarea:focus,.field select:focus{outline:none;border-color:var(--accent);box-shadow:0 0 0 3px rgba(232,85,46,.15)}
 
-.save-bar{
-  position:fixed;bottom:0;left:0;right:0;z-index:20;
-  background:rgba(13,18,32,.85);backdrop-filter:blur(14px);
-  border-top:1px solid var(--line);padding:11px 16px;
-  display:flex;gap:12px;justify-content:center;align-items:center;
+/* ---------- modal ---------- */
+.modal-overlay{
+  position:fixed;inset:0;background:rgba(5,8,16,.7);backdrop-filter:blur(5px);
+  z-index:60;display:flex;align-items:center;justify-content:center;padding:20px;
+  animation:fadeIn .25s ease both;
 }
-.save-bar .status{font-size:12px;color:var(--muted);transition:color .3s}
-.save-bar .status.ok{color:var(--ok)} .save-bar .status.err{color:#f87171}
+.modal{
+  width:100%;max-width:680px;max-height:88vh;overflow-y:auto;
+  background:var(--bg2);border:1px solid var(--line);border-radius:20px;
+  animation:popIn .3s cubic-bezier(.34,1.56,.64,1) both;
+}
+.modal-head{display:flex;align-items:center;gap:10px;padding:15px 20px;border-bottom:1px solid var(--line);position:sticky;top:0;background:var(--bg2);z-index:2;border-radius:20px 20px 0 0}
+.modal-head h3{font-size:15px;flex:1}
+.modal-body{padding:16px 20px}
+.modal-foot{display:flex;gap:10px;justify-content:flex-start;padding:14px 20px;border-top:1px solid var(--line);position:sticky;bottom:0;background:var(--bg2);border-radius:0 0 20px 20px}
+.media-strip{
+  display:flex;gap:10px;align-items:center;flex-wrap:wrap;
+  background:rgba(232,85,46,.05);border:1px dashed rgba(232,85,46,.35);
+  border-radius:12px;padding:10px 12px;margin-bottom:10px;
+}
+.thumb-preview{width:74px;height:48px;border-radius:9px;object-fit:cover;border:1px solid var(--line)}
+.up-note{font-size:10.5px;color:var(--muted);flex-basis:100%}
 
+/* ---------- toast / skeleton ---------- */
 .toast{
-  position:fixed;bottom:74px;left:50%;z-index:99;transform:translate(-50%,20px);
+  position:fixed;bottom:24px;left:50%;z-index:99;transform:translate(-50%,20px);
   background:var(--surface2);border:1px solid var(--line);color:var(--text);
   padding:11px 20px;border-radius:14px;font-size:13px;display:none;
   box-shadow:0 10px 30px rgba(0,0,0,.5);white-space:nowrap;max-width:92vw;
   animation:toastIn .35s cubic-bezier(.34,1.56,.64,1) both;
 }
 .toast.ok{border-color:rgba(15,157,118,.5)} .toast.err{border-color:rgba(239,68,68,.5)}
-
-#skeleton{position:fixed;inset:0;z-index:50;background:rgba(10,14,23,.92);backdrop-filter:blur(6px);display:none;align-items:center;justify-content:center;flex-direction:column;gap:18px}
+#skeleton{position:fixed;inset:0;z-index:80;background:rgba(10,14,23,.9);backdrop-filter:blur(6px);display:none;align-items:center;justify-content:center;flex-direction:column;gap:16px}
 #skeleton.show{display:flex}
-.spinner{width:46px;height:46px;border-radius:50%;border:3px solid var(--line);border-top-color:var(--accent);animation:spin .8s linear infinite}
+.spinner{width:44px;height:44px;border-radius:50%;border:3px solid var(--line);border-top-color:var(--accent);animation:spin .8s linear infinite}
 @keyframes spin{to{transform:rotate(360deg)}}
 #skeleton p{color:var(--muted);font-size:13px;animation:blink 1.6s infinite}
 
-#empty{
-  display:none;text-align:center;padding:46px 20px;border:1.5px dashed var(--line);
-  border-radius:var(--radius);margin-top:16px;animation:fadeUp .5s ease both;
+/* ---------- texts view groups ---------- */
+.txt-group{margin-bottom:14px}
+.txt-group > h3{
+  font-size:13px;color:var(--accent2);padding:9px 13px;background:var(--surface2);
+  border-radius:12px;margin-bottom:10px;font-weight:700;
 }
-#empty.show{display:block}
-#empty .big{font-size:42px;margin-bottom:10px;animation:floaty 3s ease-in-out infinite}
+
+.empty{
+  text-align:center;padding:50px 20px;border:1.5px dashed var(--line);border-radius:var(--radius);
+  animation:fadeUp .4s ease both;
+}
+.empty .big{font-size:40px;margin-bottom:8px;animation:floaty 3s ease-in-out infinite}
 @keyframes floaty{0%,100%{transform:translateY(0)}50%{transform:translateY(-8px)}}
-#empty p{color:var(--muted);font-size:13px}
+.empty p{color:var(--muted);font-size:13px}
 
-footer{text-align:center;color:var(--muted);font-size:11px;padding:24px 0 80px;position:relative;z-index:1}
-
-@keyframes fadeUp{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:none}}
-@keyframes popIn{from{opacity:0;transform:scale(.7)}to{opacity:1;transform:scale(1)}}
+@keyframes fadeUp{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:none}}
+@keyframes fadeIn{from{opacity:0}to{opacity:1}}
+@keyframes popIn{from{opacity:0;transform:scale(.85)}to{opacity:1;transform:scale(1)}}
 @keyframes toastIn{from{opacity:0;transform:translate(-50%,20px) scale(.9)}to{opacity:1;transform:translate(-50%,0) scale(1)}}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:.3}}
 
-@media(max-width:640px){
-  .bar input.repo,.bar input.tok{width:100%}
-  .field{min-width:100%}
+@media(max-width:860px){
+  .app{flex-direction:column}
+  .sidebar{width:100%;flex-direction:row;align-items:center;border-left:none;border-bottom:1px solid var(--line)}
+  .brand{padding:12px 14px;border-bottom:none}
+  nav{display:flex;overflow-x:auto;padding:8px;flex:1}
+  .nav-item{white-space:nowrap;padding:8px 12px}
+  .nav-item.active::before{display:none}
+  .side-foot{display:none}
+  .content{padding:14px}
 }
 </style>
 </head>
 <body>
 
-<div class="bg-glow glow1"></div>
-<div class="bg-glow glow2"></div>
+<div class="app">
+  <aside class="sidebar">
+    <div class="brand"><h1>HOJAT<b>.</b></h1><small>پنل مدیریت</small></div>
+    <nav id="nav"></nav>
+    <div class="side-foot">
+      <div class="repo-line"><span class="dot" id="sideDot"></span><span id="sideRepo">—</span></div>
+    </div>
+  </aside>
 
-<header>
-  <div class="logo"><h1>HOJAT<b>.</b></h1><small>پنل مدیریت محتوا</small></div>
-  <div class="bar">
-    <input id="repo" class="repo" placeholder="ریپو: AmirAslami/hojat-content">
-    <input id="tok" class="tok" type="password" placeholder="توکن گیت‌هاب (ghp_...)">
-    <button class="b-ghost" onclick="loadFromGithub()">⬇️ بارگذاری</button>
+  <div class="main">
+    <header class="topbar">
+      <h1 id="pageTitle">داشبورد</h1>
+      <div class="spacer"></div>
+      <div class="conn-badge" id="connBadge"><span class="dot"></span><span id="connText">وصل نشده</span></div>
+      <button class="b-ok" id="saveBtn" onclick="saveToGithub()">💾 ذخیره در گیت‌هاب</button>
+    </header>
+    <div class="content"><div class="view" id="view"></div></div>
   </div>
-</header>
-
-<main>
-  <div class="hint"><span class="dot"></span>
-    نمونه‌کار: عکس کاور و ویدیو را از همین‌جا آپلود کن (ذخیره خودکار روی گیت‌هاب). لینک یوتیوب هم می‌توانی جایگزین ویدیو بگذاری. اپ حداکثر تا ۳۰ ثانیه بعد به‌روز می‌شود.
-  </div>
-
-  <div id="empty">
-    <div class="big">🎬</div>
-    <p>برای همگام‌سازی با گیت‌هاب، توکن را وارد و «بارگذاری» بزن — یا همین حالا از دکمه‌های «افزودن» شروع کن.</p>
-  </div>
-
-  <section id="sec-works" class="open">
-    <div class="sec-head" onclick="toggleSec('sec-works')"><span class="emoji">🎬</span><h2>نمونه‌کارها</h2><span class="count" id="worksCount"></span><span class="chev">▼</span></div>
-    <div class="sec-body"><div class="sec-body-in"><div id="works"></div>
-      <div class="toolbar"><button class="b-primary" onclick="addWork()">+ افزودن نمونه‌کار</button></div>
-    </div></div>
-  </section>
-
-  <section id="sec-skills">
-    <div class="sec-head" onclick="toggleSec('sec-skills')"><span class="emoji">📊</span><h2>مهارت‌ها</h2><span class="count" id="skillsCount"></span><span class="chev">▼</span></div>
-    <div class="sec-body"><div class="sec-body-in"><div id="skills"></div>
-      <div class="toolbar"><button class="b-primary" onclick="addSkill()">+ افزودن مهارت</button></div>
-    </div></div>
-  </section>
-
-  <section id="sec-collabs">
-    <div class="sec-head" onclick="toggleSec('sec-collabs')"><span class="emoji">🤝</span><h2>همکاری‌ها</h2><span class="count" id="collabsCount"></span><span class="chev">▼</span></div>
-    <div class="sec-body"><div class="sec-body-in"><div id="collabs"></div>
-      <div class="toolbar"><button class="b-primary" onclick="addCollab()">+ افزودن همکاری</button></div>
-    </div></div>
-  </section>
-
-  <section id="sec-services">
-    <div class="sec-head" onclick="toggleSec('sec-services')"><span class="emoji">🛠</span><h2>خدمات</h2><span class="count" id="servicesCount"></span><span class="chev">▼</span></div>
-    <div class="sec-body"><div class="sec-body-in"><div id="services"></div>
-      <div class="toolbar"><button class="b-primary" onclick="addService()">+ افزودن خدمت</button></div>
-    </div></div>
-  </section>
-
-  <section id="sec-contacts">
-    <div class="sec-head" onclick="toggleSec('sec-contacts')"><span class="emoji">📮</span><h2>راه‌های ارتباط</h2><span class="count" id="contactsCount"></span><span class="chev">▼</span></div>
-    <div class="sec-body"><div class="sec-body-in"><div id="contacts"></div>
-      <div class="toolbar"><button class="b-primary" onclick="addContact()">+ افزودن راه ارتباطی</button></div>
-    </div></div>
-  </section>
-
-  <section id="sec-texts">
-    <div class="sec-head" onclick="toggleSec('sec-texts')"><span class="emoji">📝</span><h2>متن‌های صفحه</h2><span class="count" id="textsCount"></span><span class="chev">▼</span></div>
-    <div class="sec-body"><div class="sec-body-in"><div id="texts"></div></div></div>
-  </section>
-
-  <footer>پنل HOJAT • ذخیره در گیت‌هاب • اپ هر ۳۰ ثانیه خودش را به‌روز می‌کند</footer>
-</main>
-
-<div class="save-bar">
-  <span class="status" id="status"></span>
-  <button class="b-ok" id="saveBtn" onclick="saveToGithub()">💾 ذخیره در گیت‌هاب</button>
 </div>
+
 <div class="toast" id="toast"></div>
 <div id="skeleton"><div class="spinner"></div><p id="skeletonText">در حال ارتباط با گیت‌هاب…</p></div>
 <input id="mediaInput" type="file" style="display:none">
+<div id="modalRoot"></div>
 
 <script>
 'use strict';
+/* ============================================================
+   HOJAT panel — dashboard-style admin for the portfolio app.
+   All data lives in content.json on GitHub; the app fetches it.
+   ============================================================ */
+
 const ICONS = ['psychology','inventory_2','play_circle','fitness_center','mic','auto_awesome','movie','videocam','edit_note'];
 const ICON_LABELS = {psychology:'ذهن/روان‌شناسی', inventory_2:'محصول', play_circle:'پخش', fitness_center:'تناسب اندام', mic:'میکروفون', auto_awesome:'موشن/جرقه', movie:'فیلم', videocam:'دوربین', edit_note:'نوشتن'};
 const CATS = ['Instagram','YouTube','Ads'];
 const CONTACT_TYPES = ['telegram','instagram','phone','rubika','bale','email'];
 const CONTACT_LABELS = {telegram:'تلگرام', instagram:'اینستاگرام', phone:'شماره تماس', rubika:'روبیکا', bale:'بله', email:'ایمیل'};
 
-// --- FIX: data starts as a blank template so همه دکمه‌های افزودن از همان ابتدا کار می‌کنند ---
+const VIEWS = [
+  {id:'dashboard', ic:'📊', t:'داشبورد'},
+  {id:'works',     ic:'🎬', t:'نمونه‌کارها'},
+  {id:'skills',    ic:'📈', t:'مهارت‌ها'},
+  {id:'collabs',   ic:'🤝', t:'همکاری‌ها'},
+  {id:'services',  ic:'🛠', t:'خدمات'},
+  {id:'contacts',  ic:'📮', t:'راه‌های ارتباط'},
+  {id:'texts',     ic:'📝', t:'متن‌های صفحه'},
+  {id:'settings',  ic:'⚙️', t:'تنظیمات'},
+];
+
+const TEXT_FIELDS = [
+  {g:'هیرو و معرفی', items:[
+    {k:'name', l:'نام و نام‌خانوادگی'},
+    {k:'nameEn', l:'نام لاتین'},
+    {k:'kicker', l:'تخصص (خط بالای نام)'},
+    {k:'heroLead', l:'جمله معرفی'},
+  ]},
+  {g:'دکمه‌ها و تگ‌ها', items:[
+    {k:'seeWorks', l:'دکمه نمونه‌کارها'},
+    {k:'aboutMe', l:'دکمه درباره من'},
+    {k:'presentMode', l:'دکمه حالت ارائه'},
+    {k:'stat1v', l:'تگ ۱'},
+    {k:'stat1', l:'زیرنویس تگ ۱'},
+    {k:'stat2v', l:'تگ ۲'},
+    {k:'stat2', l:'زیرنویس تگ ۲'},
+    {k:'stat3v', l:'تگ ۳ (شهر)'},
+    {k:'stat3', l:'زیرنویس تگ ۳'},
+  ]},
+  {g:'رویکرد تدوین', items:[
+    {k:'approach', l:'تیتر بخش'},
+    {k:'approachSub', l:'زیرتیتر'},
+    {k:'a1t', l:'اصول ۱ — عنوان'},{k:'a1', l:'اصول ۱ — توضیح'},
+    {k:'a2t', l:'اصول ۲ — عنوان'},{k:'a2', l:'اصول ۲ — توضیح'},
+    {k:'a3t', l:'اصول ۳ — عنوان'},{k:'a3', l:'اصول ۳ — توضیح'},
+    {k:'a4t', l:'اصول ۴ — عنوان'},{k:'a4', l:'اصول ۴ — توضیح'},
+  ]},
+  {g:'نمونه‌کارها و درباره', items:[
+    {k:'featured', l:'تیتر منتخب‌ها'},
+    {k:'works', l:'تیتر صفحه نمونه‌کارها'},
+    {k:'worksSub', l:'زیرتیتر نمونه‌کارها'},
+    {k:'worksNote', l:'یادداشت نمونه‌کارها'},
+    {k:'aboutTitle', l:'تیتر درباره'},
+    {k:'aboutText', l:'متن درباره'},
+  ]},
+  {g:'مهارت‌ها / همکاری‌ها / خدمات', items:[
+    {k:'skills', l:'تیتر مهارت‌ها'},
+    {k:'exp', l:'تیتر همکاری‌ها'},
+    {k:'expSub', l:'زیرتیتر همکاری‌ها'},
+    {k:'services', l:'تیتر خدمات'},
+    {k:'servicesSub', l:'زیرتیتر خدمات'},
+  ]},
+  {g:'تحصیلات و تجهیزات', items:[
+    {k:'edu', l:'تیتر بخش'},
+    {k:'eduT', l:'عنوان مدرک'},
+    {k:'eduD', l:'توضیح مدرک'},
+    {k:'gearT', l:'تیتر تجهیزات'},
+    {k:'gearText', l:'متن تجهیزات'},
+  ]},
+  {g:'تماس و فوتر', items:[
+    {k:'contactT', l:'تیتر همکاری؟'},
+    {k:'contactD', l:'متن دعوت به همکاری'},
+    {k:'contactRows', l:'تیتر راه‌های ارتباط'},
+    {k:'sendMsg', l:'دکمه ثبت پیام'},
+    {k:'phName', l:'جای‌نگه‌دار نام'},
+    {k:'phMsg', l:'جای‌نگه‌دار پیام'},
+    {k:'footer', l:'متن فوتر'},
+  ]},
+];
+
 function blankData(){ return { texts:{fa:{}, en:{}}, works:[], skills:[], collabs:[], services:[], contacts:[] }; }
 let data = blankData();
+let loadedFromGithub = false;
 let fileSha = null;
 let owner = '', repo = '', branch = 'main', path = 'content.json';
+let currentView = 'dashboard';
+let pendingUpload = null;
 
+/* ---------------- tiny helpers ---------------- */
 const $ = id => document.getElementById(id);
 function el(tag, attrs = {}, children = []) {
   const node = document.createElement(tag);
@@ -307,7 +361,10 @@ function el(tag, attrs = {}, children = []) {
     else if (k === 'value') node.value = v ?? '';
     else node.setAttribute(k, v);
   }
-  for (const c of children) node.appendChild(c);
+  for (const c of children) {
+    if (c === '' || c == null) continue;
+    node.appendChild(typeof c === 'string' ? document.createTextNode(c) : c);
+  }
   return node;
 }
 function field(labelText, value, oninput, tag = 'input', options) {
@@ -333,43 +390,49 @@ function toast(msg, kind = '') {
   const t = $('toast'); t.textContent = msg; t.className = 'toast ' + kind; t.style.display = 'block';
   clearTimeout(t._h); t._h = setTimeout(() => t.style.display = 'none', 3200);
 }
-function toggleSec(id) { $(id).classList.toggle('open'); }
-function setStatus(s, kind = '') { const n = $('status'); n.textContent = s; n.className = 'status ' + kind; }
-function refreshCounts() {
-  $('worksCount').textContent = data.works.length + ' مورد';
-  $('skillsCount').textContent = data.skills.length + ' مورد';
-  $('collabsCount').textContent = data.collabs.length + ' مورد';
-  $('servicesCount').textContent = data.services.length + ' مورد';
-  $('contactsCount').textContent = data.contacts.length + ' مورد';
-  $('textsCount').textContent = Object.keys(data.texts?.fa || {}).length + ' متن';
-}
+function skeleton(show, text) { if (text) $('skeletonText').textContent = text; $('skeleton').classList.toggle('show', show); }
 function stagger(container) {
-  [...container.querySelectorAll('.item')].forEach((n, i) => n.style.animationDelay = (i * 45) + 'ms');
+  [...container.querySelectorAll('.row-item, .stat-card, .card')].forEach((n, i) => n.style.animationDelay = (i * 40) + 'ms');
 }
-function hideEmpty(){ $('empty').classList.remove('show'); }
+function blankTr(fa = '', en = '') { return {fa, en}; }
+function hideEmpty(){ const e = $('view').querySelector('.empty'); if (e) e.remove(); }
+function pagesBase(){ return `https://${(owner||'').toLowerCase()}.github.io/${repo}`; }
 
+/* ---------------- settings & GitHub ---------------- */
 function loadSettings() {
   owner = localStorage.getItem('hojat-owner') || 'AmirAslami';
   repo = localStorage.getItem('hojat-repo') || 'hojat-content';
   branch = localStorage.getItem('hojat-branch') || 'main';
   path = localStorage.getItem('hojat-path') || 'content.json';
-  $('tok').value = localStorage.getItem('hojat-token') || '';
-  $('repo').value = owner + '/' + repo;
-  setStatus(owner ? `${owner}/${repo} • ${branch}:${path}` : '');
+  $('sideRepo').textContent = `${owner}/${repo}`;
+  const tok = localStorage.getItem('hojat-token') || '';
+  const ti = $('setTok'); if (ti) ti.value = tok;
+  const ri = $('setRepo'); if (ri) ri.value = owner + '/' + repo;
+  updateConn(null);
 }
-function saveSettings() {
-  const r = $('repo').value.trim(); const m = r.split('/');
-  if (m.length === 2) { owner = m[0]; repo = m[1]; } else repo = r;
+function saveSettingsFromInputs() {
+  const ri = $('setRepo'), ti = $('setTok');
+  if (!ri || !ti) return;
+  const m = ri.value.trim().split('/');
+  if (m.length === 2) { owner = m[0]; repo = m[1]; } else repo = ri.value.trim();
   localStorage.setItem('hojat-owner', owner);
   localStorage.setItem('hojat-repo', repo);
-  localStorage.setItem('hojat-token', $('tok').value.trim());
+  localStorage.setItem('hojat-token', ti.value.trim());
+  $('sideRepo').textContent = `${owner}/${repo}`;
 }
-function skeleton(show, text) { if (text) $('skeletonText').textContent = text; $('skeleton').classList.toggle('show', show); }
-function pagesBase(){ return `https://${(owner||'').toLowerCase()}.github.io/${repo}`; }
-
+function saveSettings() {
+  // legacy path (topbar inputs removed) — keep repo fields synced if present
+  saveSettingsFromInputs();
+}
+function updateConn(state) {
+  const b = $('connBadge'), t = $('connText'), d = $('sideDot');
+  b.className = 'conn-badge' + (state === true ? ' ok' : state === false ? ' err' : '');
+  t.textContent = state === true ? `متصل • ${owner}/${repo}` : state === false ? 'خطای اتصال' : 'وصل نشده';
+  d.className = 'dot' + (state === true ? ' ok' : state === false ? ' err' : '');
+}
 function apiHeaders() {
-  const tok = $('tok').value.trim();
-  if (!tok) { toast('برای ذخیره/آپلود، توکن گیت‌هاب لازم است — در بالا وارد کن', 'err'); throw new Error('no token'); }
+  const tok = (localStorage.getItem('hojat-token') || '').trim();
+  if (!tok) { toast('برای ذخیره/آپلود، توکن گیت‌هاب لازم است — در «تنظیمات» وارد کن', 'err'); throw new Error('no token'); }
   return { 'Authorization': 'Bearer ' + tok, 'Accept': 'application/vnd.github+json' };
 }
 async function ghFetch(url, options) {
@@ -380,20 +443,25 @@ async function ghFetch(url, options) {
   }
   return res;
 }
-// decode base64 → UTF-8 text correctly (atob alone corrupts Persian!)
 function b64ToUtf8(b64) {
   const bin = atob(b64.replace(/\n/g, ''));
   const bytes = new Uint8Array(bin.length);
   for (let i = 0; i < bin.length; i++) bytes[i] = bin.charCodeAt(i);
   return new TextDecoder('utf-8').decode(bytes);
 }
+function fileToB64(file) {
+  return new Promise((resolve, reject) => {
+    const r = new FileReader();
+    r.onload = () => resolve(r.result.split(',')[1]);
+    r.onerror = reject;
+    r.readAsDataURL(file);
+  });
+}
 
-let loadedFromGithub = false;
-
-async function loadFromGithub() {
-  saveSettings();
-  if (!owner || !repo) { toast('نام ریپو را وارد کن', 'err'); return; }
-  skeleton(true, 'در حال ارتباط با گیت‌هاب…');
+async function loadFromGithub(silent = false) {
+  saveSettingsFromInputs();
+  if (!owner || !repo) { toast('نام ریپو را در «تنظیمات» وارد کن', 'err'); return; }
+  skeleton(true, 'در حال بارگذاری محتوا…');
   try {
     const res = await ghFetch(`https://api.github.com/repos/${owner}/${repo}/contents/${path}?ref=${branch}`, { headers: apiHeaders() });
     const json = await res.json();
@@ -402,32 +470,27 @@ async function loadFromGithub() {
     if (!data.texts || typeof data.texts !== 'object') data.texts = {fa:{}, en:{}};
     for (const k of ['works','skills','collabs','services','contacts']) if (!Array.isArray(data[k])) data[k] = [];
     loadedFromGithub = true;
-    hideEmpty(); renderAll();
-    setStatus(`بارگذاری شد • ${new Date().toLocaleTimeString('fa-IR')}`, 'ok');
-    toast('محتوا از گیت‌هاب بارگذاری شد ✓', 'ok');
+    updateConn(true);
+    renderCurrent();
+    if (!silent) toast('محتوا از گیت‌هاب بارگذاری شد ✓', 'ok');
   } catch (e) {
-    setStatus('', '');
-    toast('خطا در بارگذاری: ' + e.message + ' (می‌توانی بدون بارگذاری هم شروع کنی)', 'err');
+    updateConn(false);
+    if (!silent) toast('خطا در بارگذاری: ' + e.message, 'err');
   } finally { skeleton(false); }
 }
+
 async function commitContent(msg) {
   const text = JSON.stringify(data, null, 2) + '\n';
-  // 409 (stale sha) happens when the file changed between read and write —
-  // retry automatically with a freshly fetched sha.
   for (let attempt = 1; attempt <= 3; attempt++) {
     let sha = null;
     try {
       const meta = await ghFetch(`https://api.github.com/repos/${owner}/${repo}/contents/${path}?ref=${branch}`, { headers: apiHeaders() });
       sha = (await meta.json()).sha;
-    } catch { /* file may not exist yet → sha stays null */ }
+    } catch { /* new file */ }
     try {
       await ghFetch(`https://api.github.com/repos/${owner}/${repo}/contents/${path}`, {
         method: 'PUT', headers: apiHeaders(),
-        body: JSON.stringify({
-          message: msg,
-          content: btoa(unescape(encodeURIComponent(text))),
-          sha, branch,
-        }),
+        body: JSON.stringify({ message: msg, content: btoa(unescape(encodeURIComponent(text))), sha, branch }),
       });
       fileSha = sha;
       return;
@@ -439,65 +502,51 @@ async function commitContent(msg) {
   }
 }
 async function saveToGithub(silent = false) {
-  saveSettings();
-  if (!owner || !repo) { toast('نام ریپو را وارد کن', 'err'); return; }
-  // safety: never silently overwrite GitHub content that was never loaded
+  saveSettingsFromInputs();
+  if (!owner || !repo) { toast('نام ریپو را در «تنظیمات» وارد کن', 'err'); return; }
   if (!loadedFromGithub && !silent) {
-    if (!confirm('محتوای گیت‌هاب هنوز بارگذاری نشده. اگر ذخیره کنی، ممکن است تغییرات قبلی بازنویسی شوند. اول «بارگذاری» بزن، یا ادامه بده؟')) return;
+    if (!confirm('محتوای گیت‌هاب هنوز بارگذاری نشده. ذخیره ممکن است تغییرات قبلی را بازنویسی کند. ادامه می‌دهی؟')) return;
   }
   const btn = $('saveBtn');
   btn.disabled = true; btn.classList.add('saving'); btn.textContent = '⏳ در حال ذخیره…';
   if (!silent) skeleton(true, 'در حال ذخیره محتوا…');
   try {
     await commitContent('آپدیت محتوا از پنل — ' + new Date().toLocaleString('fa-IR'));
-    setStatus('ذخیره شد ✓ ' + new Date().toLocaleTimeString('fa-IR'), 'ok');
+    updateConn(true);
+    setStatusOk();
     if (!silent) toast('ذخیره شد! اپ حداکثر تا ۳۰ ثانیه بعد به‌روز می‌شود ✓', 'ok');
   } catch (e) {
-    setStatus('', '');
+    updateConn(false);
     toast('خطا در ذخیره: ' + e.message, 'err');
   } finally {
     skeleton(false); btn.disabled = false; btn.classList.remove('saving');
     btn.textContent = '💾 ذخیره در گیت‌هاب';
   }
 }
-function loadFromFile(input) {
-  // removed — JSON files are invisible to the user; the panel + GitHub are everything
-}
-function downloadFile() {
-  // removed — same reason
-}
+function setStatusOk(){ /* topbar status handled by conn badge */ }
 
-// ---------------- media upload ----------------
-let pendingUpload = null;
-function pickMedia(i, kind, accept) {
+/* ---------------- media upload ---------------- */
+function pickMedia(workId, kind, accept) {
   const inp = $('mediaInput');
   inp.accept = accept;
-  pendingUpload = { i, kind };
+  pendingUpload = { workId, kind };
   inp.click();
 }
 $('mediaInput').addEventListener('change', e => {
   const f = e.target.files[0];
   e.target.value = '';
-  if (f && pendingUpload) uploadMedia(pendingUpload.i, pendingUpload.kind, f);
+  if (f && pendingUpload) uploadMedia(pendingUpload.workId, pendingUpload.kind, f);
   pendingUpload = null;
 });
-function fileToB64(file) {
-  return new Promise((resolve, reject) => {
-    const r = new FileReader();
-    r.onload = () => resolve(r.result.split(',')[1]);
-    r.onerror = reject;
-    r.readAsDataURL(file);
-  });
-}
-async function uploadMedia(i, kind, file) {
-  const w = data.works[i]; if (!w) return;
+async function uploadMedia(workId, kind, file) {
+  const w = data.works.find(x => x.id === workId); if (!w) return;
   const isVideo = kind === 'video';
-  if (isVideo && file.size > 90 * 1024 * 1024) { toast('ویدیو بزرگ‌تر از حد گیت‌هاب است (حداکثر ~۹۰MB) — ویدیوهای بلند را در یوتیوب بگذار و لینکش را در فیلد «لینک ویدیو» بنویس', 'err'); return; }
+  if (isVideo && file.size > 90 * 1024 * 1024) { toast('ویدیو بزرگ‌تر از حد گیت‌هاب است (~۹۰MB) — ویدیوی بلند: لینک یوتیوب/درایو', 'err'); return; }
   if (isVideo && file.size > 25 * 1024 * 1024) toast('ویدیو کمی سنگین است؛ روی اینترنت موبایل ممکن است کند باز شود', '');
   skeleton(true, isVideo ? 'در حال آپلود ویدیو…' : 'در حال آپلود عکس…');
   try {
     const ext = ((file.name.split('.').pop() || '').toLowerCase() || (isVideo ? 'mp4' : 'jpg'));
-    const mediaPath = `media/${w.id}/${isVideo ? 'video' : 'thumb'}.${ext}`;
+    const mediaPath = `media/${workId}/${isVideo ? 'video' : 'thumb'}.${ext}`;
     let sha = null;
     try {
       const meta = await ghFetch(`https://api.github.com/repos/${owner}/${repo}/contents/${mediaPath}?ref=${branch}`, { headers: apiHeaders() });
@@ -506,239 +555,421 @@ async function uploadMedia(i, kind, file) {
     const b64 = await fileToB64(file);
     await ghFetch(`https://api.github.com/repos/${owner}/${repo}/contents/${mediaPath}`, {
       method: 'PUT', headers: apiHeaders(),
-      body: JSON.stringify({
-        message: `آپلود ${isVideo ? 'ویدیو' : 'کاور'} برای «${w.title?.fa || w.id}»`,
-        content: b64, sha, branch,
-      }),
+      body: JSON.stringify({ message: `آپلود ${isVideo ? 'ویدیو' : 'کاور'} برای «${w.title?.fa || workId}»`, content: b64, sha, branch }),
     });
     const url = `${pagesBase()}/${mediaPath}`;
     if (isVideo) { w.videoUrl = url; w.url = null; } else { w.thumbUrl = url; }
-    renderWorks(); stagger($('works'));
-    await saveToGithub(true); // auto-commit content.json so the app sees it right away
-    toast((isVideo ? '🎬 ویدیو' : '🖼 کاور') + ' آپلود و ذخیره شد — اپ تا ۳۰ ثانیه بعد نشان می‌دهد ✓', 'ok');
+    await saveToGithub(true);
+    toast((isVideo ? '🎬 ویدیو' : '🖼 کاور') + ' آپلود و ذخیره شد ✓', 'ok');
+    renderCurrent();
   } catch (e) {
     toast('خطا در آپلود: ' + e.message, 'err');
   } finally { skeleton(false); }
 }
-function clearMedia(i, kind) {
-  const w = data.works[i]; if (!w) return;
+function clearMedia(workId, kind) {
+  const w = data.works.find(x => x.id === workId); if (!w) return;
   if (kind === 'video') w.videoUrl = null; else w.thumbUrl = null;
-  renderWorks(); stagger($('works'));
+  renderCurrent();
   toast('از محتوا حذف شد — برای اعمال، ذخیره بزن', '');
 }
 
-// ---------------- renderers ----------------
-function renderAll() {
-  renderWorks(); renderSkills(); renderCollabs(); renderServices(); renderContacts(); renderTexts();
-  refreshCounts();
-  stagger($('works')); stagger($('skills')); stagger($('collabs')); stagger($('services')); stagger($('contacts'));
-}
-function mediaStrip(w, i) {
-  const strip = el('div', {class:'media-strip'});
-  if (w.thumbUrl) strip.appendChild(el('img', {class:'thumb-preview', src: w.thumbUrl, alt:'کاور'}));
-  strip.appendChild(el('button', {class:'b-media', onclick:() => pickMedia(i, 'thumb', 'image/*')}, [document.createTextNode('🖼 آپلود عکس کاور')]));
-  strip.appendChild(el('button', {class:'b-media', onclick:() => pickMedia(i, 'video', 'video/*')}, [document.createTextNode('🎥 آپلود ویدیو')]));
-  if (w.thumbUrl) strip.appendChild(el('span', {class:'badge-ok'}, [document.createTextNode('✓ کاور آپلود شد')]));
-  if (w.videoUrl) strip.appendChild(el('span', {class:'badge-ok'}, [document.createTextNode('✓ ویدیو آپلود شد')]));
-  if (w.videoUrl) strip.appendChild(el('button', {class:'badge-clear', onclick:() => clearMedia(i, 'video')}, [document.createTextNode('✕ حذف ویدیو')]));
-  if (w.thumbUrl) strip.appendChild(el('button', {class:'badge-clear', onclick:() => clearMedia(i, 'thumb')}, [document.createTextNode('✕ حذف کاور')]));
-  strip.appendChild(el('span', {class:'up-note'}, [document.createTextNode('ویدیو ≤۹۰MB — ویدیوی بلندتر: لینک یوتیوب یا گوگل‌درایو (share فایل) بگذار')]));
-  if ((w.url || '').includes('drive.google.com')) {
-    strip.appendChild(el('span', {class:'badge-ok'}, [document.createTextNode('✓ لینک گوگل‌درایو')]));
+/* ---------------- navigation ---------------- */
+function renderNav() {
+  const nav = $('nav'); nav.innerHTML = '';
+  for (const v of VIEWS) {
+    const count = {
+      works: data.works.length, skills: data.skills.length,
+      collabs: data.collabs.length, services: data.services.length,
+      contacts: data.contacts.length,
+      texts: Object.keys(data.texts?.fa || {}).length,
+    }[v.id];
+    const b = el('button', {class:'nav-item' + (currentView === v.id ? ' active' : ''), onclick:() => showView(v.id)}, [
+      el('span', {class:'ic'}, [document.createTextNode(v.ic)]),
+      document.createTextNode(v.t),
+      count != null ? el('span', {class:'badge'}, [document.createTextNode(String(count))]) : '',
+    ]);
+    nav.appendChild(b);
   }
-  return strip;
 }
-function renderWorks() {
-  const box = $('works'); box.innerHTML = '';
-  data.works.forEach((w, i) => {
-    const item = el('div', {class:'item'});
-    item.appendChild(el('div', {class:'item-head'}, [
-      el('b', {}, [document.createTextNode(w.title?.fa || '(بدون عنوان)')]),
-      el('button', {class:'b-danger', onclick:() => { if (confirm('حذف شود؟')) { data.works.splice(i, 1); renderAll(); } }}, [document.createTextNode('حذف')]),
-    ]));
-    item.appendChild(mediaStrip(w, i));
-    item.appendChild(trField('عنوان', w, 'title'));
-    item.appendChild(trField('توضیح کوتاه', w, 'desc'));
-    item.appendChild(trField('توضیح کامل صفحه جزئیات', w, 'detail'));
-    item.appendChild(trField('نقش', w, 'role'));
-    const r2 = el('div', {class:'row'});
-    r2.appendChild(field('لینک ویدیو (یوتیوب / اینستاگرام / گوگل‌درایو — جایگزین ویدیوی آپلودی)', w.url || '', e => w.url = e.target.value || null));
-    r2.appendChild(field('مدت (مثل 0:40)', w.duration, e => w.duration = e.target.value));
-    const r3 = el('div', {class:'row'});
-    r3.appendChild(field('دسته', w.category, e => w.category = e.target.value, 'select', () => CATS.map(c => ({v:c, t:c}))));
-    r3.appendChild(field('آیکون', w.icon, e => w.icon = e.target.value, 'select', () => ICONS.map(ic => ({v:ic, t:ICON_LABELS[ic]}))));
-    r3.appendChild(field('ابزارها (با کاما)', (w.tools || []).join(', '), e => w.tools = e.target.value.split(',').map(s => s.trim()).filter(Boolean)));
-    item.appendChild(r2); item.appendChild(r3);
-    const r4 = el('div', {class:'row'});
-    r4.appendChild(field('رنگ شروع گرادینت', w.gradient?.[0], e => { w.gradient = w.gradient || []; w.gradient[0] = e.target.value; }));
-    r4.appendChild(field('رنگ پایان گرادینت', w.gradient?.[1], e => { w.gradient = w.gradient || []; w.gradient[1] = e.target.value; }));
-    item.appendChild(r4);
-    box.appendChild(item);
-  });
+function showView(id) {
+  currentView = id;
+  const v = VIEWS.find(x => x.id === id);
+  $('pageTitle').textContent = v.t;
+  renderNav();
+  renderCurrent();
+  document.querySelector('.content').scrollTop = 0;
 }
-function renderSkills() {
-  const box = $('skills'); box.innerHTML = '';
-  data.skills.forEach((s, i) => {
-    const item = el('div', {class:'item'});
-    item.appendChild(el('div', {class:'item-head'}, [
-      el('b', {}, [document.createTextNode(s.name?.fa || '')]),
-      el('button', {class:'b-danger', onclick:() => { data.skills.splice(i, 1); renderAll(); }}, [document.createTextNode('حذف')]),
-    ]));
-    item.appendChild(trField('نام', s, 'name'));
-    item.appendChild(field('درصد (۰ تا ۱۰۰)', s.value, e => s.value = Math.max(0, Math.min(100, parseInt(e.target.value) || 0))));
-    box.appendChild(item);
-  });
+function renderCurrent() {
+  const f = { dashboard:renderDashboard, works:renderWorks, skills:renderSkills, collabs:renderCollabs, services:renderServices, contacts:renderContacts, texts:renderTexts, settings:renderSettings }[currentView];
+  const view = $('view'); view.innerHTML = '';
+  f(view);
+  stagger(view);
 }
-function renderCollabs() {
-  const box = $('collabs'); box.innerHTML = '';
-  data.collabs.forEach((c, i) => {
-    const item = el('div', {class:'item'});
-    item.appendChild(el('div', {class:'item-head'}, [
-      el('b', {}, [document.createTextNode(c.name?.fa || '')]),
-      el('button', {class:'b-danger', onclick:() => { data.collabs.splice(i, 1); renderAll(); }}, [document.createTextNode('حذف')]),
-    ]));
-    item.appendChild(trField('نام', c, 'name'));
-    item.appendChild(trField('توضیح', c, 'desc'));
-    item.appendChild(trField('بازه زمانی (اختیاری)', c, 'period'));
-    box.appendChild(item);
-  });
+
+/* ---------------- dashboard ---------------- */
+function statCard(ic, color, num, lbl) {
+  return el('div', {class:'stat-card'}, [
+    el('div', {class:'ic ' + color}, [document.createTextNode(ic)]),
+    el('div', {}, [
+      el('div', {class:'num'}, [document.createTextNode(String(num))]),
+      el('div', {class:'lbl'}, [document.createTextNode(lbl)]),
+    ]),
+  ]);
 }
-function renderServices() {
-  const box = $('services'); box.innerHTML = '';
-  data.services.forEach((s, i) => {
-    const item = el('div', {class:'item'});
-    item.appendChild(el('div', {class:'item-head'}, [
-      el('b', {}, [document.createTextNode(s.title?.fa || '')]),
-      el('button', {class:'b-danger', onclick:() => { data.services.splice(i, 1); renderAll(); }}, [document.createTextNode('حذف')]),
-    ]));
-    item.appendChild(trField('عنوان', s, 'title'));
-    item.appendChild(trField('توضیح', s, 'desc'));
-    item.appendChild(field('آیکون', s.icon, e => s.icon = e.target.value, 'select', () => ICONS.map(ic => ({v:ic, t:ICON_LABELS[ic]}))));
-    box.appendChild(item);
-  });
+function renderDashboard(view) {
+  const mediaCount = data.works.filter(w => w.thumbUrl || w.videoUrl || w.url).length;
+  view.appendChild(el('div', {class:'stat-grid'}, [
+    statCard('🎬', 'orange', data.works.length, 'نمونه‌کار'),
+    statCard('📈', 'violet', data.skills.length, 'مهارت'),
+    statCard('🖼', 'green', data.works.filter(w => w.thumbUrl).length, 'کاور آپلودشده'),
+    statCard('🎥', 'blue', data.works.filter(w => w.videoUrl).length, 'ویدیو آپلودشده'),
+  ]));
+
+  const quick = el('div', {class:'card'});
+  quick.appendChild(el('h3', {}, [document.createTextNode('عملیات سریع')]));
+  const tb = el('div', {class:'toolbar', style:'margin-bottom:0'});
+  tb.appendChild(el('button', {class:'b-primary', onclick:() => { showView('works'); openWorkModal(null); }}, [document.createTextNode('+ نمونه‌کار جدید')]));
+  tb.appendChild(el('button', {class:'b-ghost', onclick:() => showView('texts')}, [document.createTextNode('📝 ویرایش متن‌ها')]));
+  tb.appendChild(el('button', {class:'b-ghost', onclick:() => loadFromGithub()}, [document.createTextNode('⬇️ همگام‌سازی با گیت‌هاب')]));
+  quick.appendChild(tb);
+  view.appendChild(quick);
+
+  const info = el('div', {class:'card'});
+  info.appendChild(el('h3', {}, [document.createTextNode('وضعیت اتصال')]));
+  info.appendChild(el('div', {class:'sub', style:'font-size:12px;color:var(--muted)'}, [
+    document.createTextNode(`ریپو: ${owner}/${repo} • شاخه: ${branch} • فایل: ${path}`),
+  ]));
+  info.appendChild(el('div', {style:'font-size:12px;color:var(--muted);margin-top:6px'}, [
+    document.createTextNode('هر ذخیره، content.json را در گیت‌هاب به‌روز می‌کند و اپ حداکثر تا ۳۰ ثانیه بعد آن را دریافت می‌کند.'),
+  ]));
+  view.appendChild(info);
+
+  if (!loadedFromGithub) {
+    const warn = el('div', {class:'card', style:'border-color:rgba(247,178,111,.4)'});
+    warn.appendChild(el('div', {style:'font-size:13px'}, [document.createTextNode('⚠️ هنوز از گیت‌هاب بارگذاری نکردی — برای دیدن محتوای فعلی، همگام‌سازی بزن.')]));
+    view.appendChild(warn);
+  }
 }
-function renderContacts() {
-  const box = $('contacts'); box.innerHTML = '';
-  data.contacts.forEach((c, i) => {
-    const item = el('div', {class:'item'});
-    item.appendChild(el('div', {class:'item-head'}, [
-      el('b', {}, [document.createTextNode(c.label || '')]),
-      el('button', {class:'b-danger', onclick:() => { data.contacts.splice(i, 1); renderAll(); }}, [document.createTextNode('حذف')]),
+
+/* ---------------- works ---------------- */
+function mediaBadges(w) {
+  const box = el('div', {style:'display:flex;gap:6px;flex-wrap:wrap'});
+  if (w.thumbUrl) box.appendChild(el('span', {class:'badge ok'}, [document.createTextNode('✓ کاور')]));
+  if (w.videoUrl) box.appendChild(el('span', {class:'badge ok'}, [document.createTextNode('✓ ویدیو')]));
+  if (w.url) box.appendChild(el('span', {class:'badge warn'}, [document.createTextNode('🔗 لینک')]));
+  return box;
+}
+function renderWorks(view) {
+  const tb = el('div', {class:'toolbar'});
+  tb.appendChild(el('button', {class:'b-primary', onclick:() => openWorkModal(null)}, [document.createTextNode('+ افزودن نمونه‌کار')]));
+  tb.appendChild(el('span', {class:'spacer'}));
+  tb.appendChild(el('span', {style:'font-size:12px;color:var(--muted)'}, [document.createTextNode('ویرایش با دکمه ✏️ — کاور و ویدیو داخل مودال آپلود می‌شوند')]));
+  view.appendChild(tb);
+
+  if (!data.works.length) {
+    view.appendChild(el('div', {class:'empty'}, [
+      el('div', {class:'big'}, [document.createTextNode('🎬')]),
+      el('p', {}, [document.createTextNode('هنوز نمونه‌کاری نیست — با دکمه بالا اضافه کن.')]),
     ]));
-    const r = el('div', {class:'row'});
-    r.appendChild(field('نوع', c.type, e => { c.type = e.target.value; renderContacts(); }, 'select', () => CONTACT_TYPES.map(t => ({v:t, t:CONTACT_LABELS[t]}))));
-    r.appendChild(field('برچسب', c.label, e => c.label = e.target.value));
-    r.appendChild(field(
-      c.type === 'phone' ? 'شماره (مثل 09151234567)' :
-      c.type === 'rubika' ? 'آیدی/لینک روبیکا (مثل rubika.ir/hojat)' :
-      c.type === 'bale' ? 'آیدی/لینک بله (مثل ble.ir/hojat)' :
-      'مقدار',
-      c.value,
-      e => {
-        c.value = e.target.value;
-        if (c.type === 'phone') c.url = 'tel:' + c.value.replace(/[^\d+]/g, '');
-      }
-    ));
-    item.appendChild(r);
-    item.appendChild(field(
-      c.type === 'phone' ? 'لینک تماس (خودکار با tel: ساخته می‌شود)' : 'لینک کامل (اختیاری)',
-      c.url, e => c.url = e.target.value));
-    box.appendChild(item);
+    return;
+  }
+  for (const w of data.works) {
+    const row = el('div', {class:'row-item'});
+    if (w.thumbUrl) row.appendChild(el('img', {class:'thumb-s', src:w.thumbUrl, alt:''}));
+    else row.appendChild(el('div', {class:'thumb-ph', style:`background:linear-gradient(135deg,${w.gradient?.[0] || '#e8552e'},${w.gradient?.[1] || '#7a2d8f'})`}, [document.createTextNode('🎬')]));
+    const grow = el('div', {class:'grow'});
+    grow.appendChild(el('div', {class:'title'}, [document.createTextNode(w.title?.fa || '(بدون عنوان)')]));
+    grow.appendChild(el('div', {class:'sub'}, [document.createTextNode(`${w.duration || ''} • ${state_of(w)}`)]));
+    row.appendChild(grow);
+    const badges = el('div', {style:'display:flex;flex-direction:column;gap:5px;align-items:flex-end'});
+    badges.appendChild(el('span', {class:'badge cat'}, [document.createTextNode(w.category || '')]));
+    badges.appendChild(mediaBadges(w));
+    row.appendChild(badges);
+    row.appendChild(el('div', {class:'actions'}, [
+      el('button', {class:'b-soft', onclick:() => openWorkModal(w.id)}, [document.createTextNode('✏️ ویرایش')]),
+      el('button', {class:'b-danger', onclick:() => { if (confirm(`حذف «${w.title?.fa || ''}»؟`)) { data.works = data.works.filter(x => x.id !== w.id); renderCurrent(); toast('حذف شد — برای اعمال، ذخیره بزن', ''); } }}, [document.createTextNode('حذف')]),
+    ]));
+    view.appendChild(row);
+  }
+}
+function state_of(w) {
+  if (w.videoUrl) return 'ویدیو آپلودی';
+  if (w.url) return 'لینک ویدیو';
+  return 'بدون ویدیو';
+}
+
+function openWorkModal(workId) {
+  const isNew = !workId;
+  let w;
+  if (isNew) {
+    w = {
+      id: 'work-' + Date.now(),
+      title: blankTr('نمونه‌کار جدید', 'New work'),
+      category: 'Instagram',
+      desc: blankTr('توضیح کوتاه…', 'Short…'),
+      detail: blankTr('توضیح کامل…', 'Full…'),
+      tools: ['Premiere Pro'],
+      role: blankTr('تدوینگر', 'Editor'),
+      url: null, thumbUrl: null, videoUrl: null,
+      icon: 'play_circle',
+      gradient: ['#e8552e', '#7a2d8f'],
+      duration: '0:30',
+    };
+    data.works.push(w);
+  } else {
+    w = JSON.parse(JSON.stringify(data.works.find(x => x.id === workId)));
+    w._origId = workId;
+  }
+  const backup = isNew ? null : JSON.parse(JSON.stringify(data.works.find(x => x.id === workId)));
+
+  const body = el('div');
+  const strip = el('div', {class:'media-strip'});
+  if (w.thumbUrl) strip.appendChild(el('img', {class:'thumb-preview', src:w.thumbUrl, alt:'کاور'}));
+  strip.appendChild(el('button', {class:'b-soft', onclick:() => pickMedia(w.id, 'thumb', 'image/*')}, [document.createTextNode('🖼 آپلود کاور')]));
+  strip.appendChild(el('button', {class:'b-soft', onclick:() => pickMedia(w.id, 'video', 'video/*')}, [document.createTextNode('🎥 آپلود ویدیو')]));
+  if (w.thumbUrl) strip.appendChild(el('span', {class:'badge ok'}, [document.createTextNode('✓ کاور')]));
+  if (w.videoUrl) strip.appendChild(el('span', {class:'badge ok'}, [document.createTextNode('✓ ویدیو')]));
+  strip.appendChild(el('span', {class:'up-note'}, [document.createTextNode('کاور: عکس • ویدیو: تا ~۹۰MB — ویدیوی بلندتر: لینک یوتیوب / گوگل‌درایو در فیلد لینک')]));
+  body.appendChild(strip);
+
+  body.appendChild(trField('عنوان', w, 'title'));
+  body.appendChild(trField('توضیح کوتاه', w, 'desc'));
+  body.appendChild(trField('توضیح کامل جزئیات', w, 'detail'));
+  body.appendChild(trField('نقش', w, 'role'));
+  const r1 = el('div', {class:'row'});
+  r1.appendChild(field('دسته', w.category, e => w.category = e.target.value, 'select', () => CATS.map(c => ({v:c, t:c}))));
+  r1.appendChild(field('آیکون', w.icon, e => w.icon = e.target.value, 'select', () => ICONS.map(ic => ({v:ic, t:ICON_LABELS[ic]}))));
+  r1.appendChild(field('مدت (مثل 0:40)', w.duration, e => w.duration = e.target.value));
+  body.appendChild(r1);
+  body.appendChild(field('لینک ویدیو (یوتیوب / اینستاگرام / گوگل‌درایو — share)', w.url || '', e => w.url = e.target.value || null));
+  const r2 = el('div', {class:'row'});
+  r2.appendChild(field('رنگ شروع گرادینت', w.gradient?.[0], e => { w.gradient = w.gradient || []; w.gradient[0] = e.target.value; }));
+  r2.appendChild(field('رنگ پایان گرادینت', w.gradient?.[1], e => { w.gradient = w.gradient || []; w.gradient[1] = e.target.value; }));
+  body.appendChild(r2);
+  body.appendChild(field('ابزارها (با کاما)', (w.tools || []).join(', '), e => w.tools = e.target.value.split(',').map(s => s.trim()).filter(Boolean)));
+
+  openModal(isNew ? 'افزودن نمونه‌کار' : 'ویرایش نمونه‌کار', body, {
+    onSave: async () => {
+      const idx = data.works.findIndex(x => x.id === (isNew ? w.id : workId));
+      data.works[idx] = w;
+      await saveToGithub(true);
+      renderCurrent();
+      toast('نمونه‌کار ذخیره شد ✓', 'ok');
+    },
+    onCancel: () => { if (backup) { const idx = data.works.findIndex(x => x.id === workId); data.works[idx] = backup; } else data.works = data.works.filter(x => x.id !== w.id); renderCurrent(); },
   });
 }
 
-// ---------------- texts (everything visible on the app screens) ----------------
-const TEXT_FIELDS = [
-  {k:'name', l:'نام و نام‌خانوادگی'},
-  {k:'nameEn', l:'نام لاتین (زیر نام فارسی)'},
-  {k:'kicker', l:'تخصص (خط بالای نام)'},
-  {k:'heroLead', l:'جمله معرفی (زیر نام)'},
-  {k:'seeWorks', l:'دکمه: دیدن نمونه‌کارها'},
-  {k:'aboutMe', l:'دکمه: درباره من'},
-  {k:'presentMode', l:'دکمه: حالت ارائه'},
-  {k:'stat1v', l:'تگ ۱ (مثل Premiere Pro)'},
-  {k:'stat1', l:'زیرنویس تگ ۱'},
-  {k:'stat2v', l:'تگ ۲ (مثل After Effects)'},
-  {k:'stat2', l:'زیرنویس تگ ۲'},
-  {k:'stat3v', l:'تگ ۳ (شهر)'},
-  {k:'stat3', l:'زیرنویس تگ ۳'},
-  {k:'approach', l:'تیتر: رویکرد من به تدوین'},
-  {k:'approachSub', l:'زیرتیتر رویکرد'},
-  {k:'a1t', l:'رویکرد ۱ — عنوان'},
-  {k:'a1', l:'رویکرد ۱ — توضیح'},
-  {k:'a2t', l:'رویکرد ۲ — عنوان'},
-  {k:'a2', l:'رویکرد ۲ — توضیح'},
-  {k:'a3t', l:'رویکرد ۳ — عنوان'},
-  {k:'a3', l:'رویکرد ۳ — توضیح'},
-  {k:'a4t', l:'رویکرد ۴ — عنوان'},
-  {k:'a4', l:'رویکرد ۴ — توضیح'},
-  {k:'featured', l:'تیتر: نمونه‌کارهای منتخب'},
-  {k:'works', l:'تیتر صفحه نمونه‌کارها'},
-  {k:'worksSub', l:'زیرتیتر نمونه‌کارها'},
-  {k:'worksNote', l:'یادداشت پایین نمونه‌کارها'},
-  {k:'aboutTitle', l:'تیتر درباره من'},
-  {k:'aboutText', l:'متن درباره من'},
-  {k:'skills', l:'تیتر مهارت‌ها'},
-  {k:'exp', l:'تیتر همکاری‌ها'},
-  {k:'expSub', l:'زیرتیتر همکاری‌ها'},
-  {k:'services', l:'تیتر خدمات'},
-  {k:'servicesSub', l:'زیرتیتر خدمات'},
-  {k:'edu', l:'تیتر تحصیلات و تجهیزات'},
-  {k:'eduT', l:'عنوان مدرک'},
-  {k:'eduD', l:'توضیح مدرک'},
-  {k:'gearT', l:'تیتر تجهیزات'},
-  {k:'gearText', l:'متن تجهیزات'},
-  {k:'contactT', l:'تیتر همکاری؟'},
-  {k:'contactD', l:'متن دعوت به همکاری'},
-  {k:'contactRows', l:'تیتر راه‌های ارتباط'},
-  {k:'sendMsg', l:'دکمه ثبت پیام'},
-  {k:'phName', l:'جای‌نگه‌دار: نام'},
-  {k:'phMsg', l:'جای‌نگه‌دار: پیام'},
-  {k:'footer', l:'متن فوتر'},
-];
-function renderTexts() {
+/* ---------------- skills ---------------- */
+function renderSkills(view) {
+  const tb = el('div', {class:'toolbar'});
+  tb.appendChild(el('button', {class:'b-primary', onclick:() => {
+    data.skills.push({name: blankTr('مهارت جدید', 'New skill'), value: 70});
+    saveToGithub(true).then(() => renderCurrent());
+  }}, [document.createTextNode('+ افزودن مهارت')]));
+  view.appendChild(tb);
+  for (const s of data.skills) {
+    const row = el('div', {class:'row-item'});
+    const grow = el('div', {class:'grow'});
+    grow.appendChild(el('div', {class:'title'}, [document.createTextNode(s.name?.fa || '')]));
+    const pb = el('div', {class:'pbar', style:'margin-top:5px'});
+    pb.appendChild(el('i', {style:`width:${s.value}%`}));
+    grow.appendChild(pb);
+    row.appendChild(grow);
+    row.appendChild(el('div', {style:'font-weight:800;color:var(--accent2);min-width:44px;text-align:left'}, [document.createTextNode(s.value + '%')]));
+    const num = field('', s.value, e => {
+      s.value = Math.max(0, Math.min(100, parseInt(e.target.value) || 0));
+      renderCurrent();
+    }, 'input');
+    num.style.maxWidth = '76px';
+    num.querySelector('input').style.textAlign = 'center';
+    row.appendChild(num);
+    row.appendChild(el('div', {class:'actions'}, [
+      el('button', {class:'b-danger', onclick:() => { if (confirm('حذف شود؟')) { data.skills = data.skills.filter(x => x !== s); renderCurrent(); toast('حذف شد — ذخیره یادت نره', ''); } }}, [document.createTextNode('حذف')]),
+    ]));
+    view.appendChild(row);
+  }
+}
+
+/* ---------------- collabs ---------------- */
+function renderCollabs(view) {
+  const tb = el('div', {class:'toolbar'});
+  tb.appendChild(el('button', {class:'b-primary', onclick:() => {
+    data.collabs.push({name: blankTr('همکاری جدید', 'New'), desc: blankTr('توضیح…', '…'), period: null});
+    openCollabModal(data.collabs[data.collabs.length - 1], true);
+  }}, [document.createTextNode('+ افزودن همکاری')]));
+  view.appendChild(tb);
+  for (const c of data.collabs) {
+    const row = el('div', {class:'row-item'});
+    const grow = el('div', {class:'grow'});
+    grow.appendChild(el('div', {class:'title'}, [document.createTextNode(c.name?.fa || '')]));
+    grow.appendChild(el('div', {class:'sub'}, [document.createTextNode((c.desc?.fa || '') + (c.period?.fa ? ' • ' + c.period.fa : ''))]));
+    row.appendChild(grow);
+    row.appendChild(el('div', {class:'actions'}, [
+      el('button', {class:'b-soft', onclick:() => openCollabModal(c, false)}, [document.createTextNode('✏️')]),
+      el('button', {class:'b-danger', onclick:() => { if (confirm('حذف شود؟')) { data.collabs = data.collabs.filter(x => x !== c); renderCurrent(); } }}, [document.createTextNode('حذف')]),
+    ]));
+    view.appendChild(row);
+  }
+}
+function openCollabModal(c, isNew) {
+  const body = el('div');
+  body.appendChild(trField('نام', c, 'name'));
+  body.appendChild(trField('توضیح', c, 'desc'));
+  body.appendChild(trField('بازه زمانی (اختیاری)', c, 'period'));
+  const backup = JSON.parse(JSON.stringify(c));
+  openModal(isNew ? 'افزودن همکاری' : 'ویرایش همکاری', body, {
+    onSave: async () => { await saveToGithub(true); renderCurrent(); toast('ذخیره شد ✓', 'ok'); },
+    onCancel: () => { const i = data.collabs.indexOf(c); if (i >= 0) data.collabs[i] = isNew ? undefined : backup; if (isNew) data.collabs.splice(i, 1); renderCurrent(); },
+  });
+}
+
+/* ---------------- services ---------------- */
+function renderServices(view) {
+  const tb = el('div', {class:'toolbar'});
+  tb.appendChild(el('button', {class:'b-primary', onclick:() => {
+    data.services.push({title: blankTr('خدمت جدید', 'New'), desc: blankTr('توضیح…', '…'), icon: 'movie'});
+    renderCurrent();
+  }}, [document.createTextNode('+ افزودن خدمت')]));
+  view.appendChild(tb);
+  for (const s of data.services) {
+    const row = el('div', {class:'row-item'});
+    row.appendChild(el('div', {class:'thumb-ph', style:'background:linear-gradient(135deg,var(--accent),var(--accent2))'}, [document.createTextNode('🛠')]));
+    const grow = el('div', {class:'grow'});
+    grow.appendChild(el('div', {class:'title'}, [document.createTextNode(s.title?.fa || '')]));
+    grow.appendChild(el('div', {class:'sub'}, [document.createTextNode(s.desc?.fa || '')]));
+    row.appendChild(grow);
+    row.appendChild(el('div', {class:'actions'}, [
+      el('button', {class:'b-soft', onclick:() => {
+        const body = el('div');
+        body.appendChild(trField('عنوان', s, 'title'));
+        body.appendChild(trField('توضیح', s, 'desc'));
+        body.appendChild(field('آیکون', s.icon, e => s.icon = e.target.value, 'select', () => ICONS.map(ic => ({v:ic, t:ICON_LABELS[ic]}))));
+        const backup = JSON.parse(JSON.stringify(s));
+        openModal('ویرایش خدمت', body, {
+          onSave: async () => { await saveToGithub(true); renderCurrent(); toast('ذخیره شد ✓', 'ok'); },
+          onCancel: () => { const i = data.services.indexOf(s); data.services[i] = backup; renderCurrent(); },
+        });
+      }}, [document.createTextNode('✏️')]),
+      el('button', {class:'b-danger', onclick:() => { if (confirm('حذف شود؟')) { data.services = data.services.filter(x => x !== s); renderCurrent(); } }}, [document.createTextNode('حذف')]),
+    ]));
+    view.appendChild(row);
+  }
+}
+
+/* ---------------- contacts ---------------- */
+function renderContacts(view) {
+  const tb = el('div', {class:'toolbar'});
+  tb.appendChild(el('button', {class:'b-primary', onclick:() => {
+    data.contacts.push({type: 'phone', label: 'شماره تماس', value: '', url: ''});
+    renderCurrent();
+  }}, [document.createTextNode('+ افزودن راه ارتباطی')]));
+  view.appendChild(tb);
+  for (const c of data.contacts) {
+    const row = el('div', {class:'row-item'});
+    row.appendChild(el('span', {class:'badge type'}, [document.createTextNode(CONTACT_LABELS[c.type] || c.type)]));
+    const grow = el('div', {class:'grow'});
+    grow.appendChild(el('div', {class:'title'}, [document.createTextNode(c.value || '(خالی)')]));
+    if (c.url) grow.appendChild(el('div', {class:'sub'}, [document.createTextNode(c.url)]));
+    row.appendChild(grow);
+    row.appendChild(el('div', {class:'actions'}, [
+      el('button', {class:'b-soft', onclick:() => {
+        const body = el('div');
+        body.appendChild(field('نوع', c.type, e => { c.type = e.target.value; c.label = CONTACT_LABELS[e.target.value] || e.target.value; renderContacts(); }, 'select', () => CONTACT_TYPES.map(t => ({v:t, t:CONTACT_LABELS[t]}))));
+        body.appendChild(field('مقدار', c.value, e => {
+          c.value = e.target.value;
+          if (c.type === 'phone') c.url = 'tel:' + c.value.replace(/[^\d+]/g, '');
+        }));
+        body.appendChild(field('لینک کامل', c.url, e => c.url = e.target.value));
+        const backup = JSON.parse(JSON.stringify(c));
+        openModal('ویرایش راه ارتباطی', body, {
+          onSave: async () => { await saveToGithub(true); renderCurrent(); toast('ذخیره شد ✓', 'ok'); },
+          onCancel: () => { const i = data.contacts.indexOf(c); data.contacts[i] = backup; renderCurrent(); },
+        });
+      }}, [document.createTextNode('✏️')]),
+      el('button', {class:'b-danger', onclick:() => { if (confirm('حذف شود؟')) { data.contacts = data.contacts.filter(x => x !== c); renderCurrent(); } }}, [document.createTextNode('حذف')]),
+    ]));
+    view.appendChild(row);
+  }
+}
+
+/* ---------------- texts ---------------- */
+function renderTexts(view) {
+  view.appendChild(el('div', {class:'hint', style:'font-size:12px;color:var(--muted);margin-bottom:14px'}, [
+    document.createTextNode('متن‌ها هر دو زبان — فارسی و انگلیسی. خالی گذاشتن یعنی متن پیش‌فرض اپ نمایش داده شود.'),
+  ]));
   data.texts = data.texts || {fa:{}, en:{}};
   data.texts.fa = data.texts.fa || {}; data.texts.en = data.texts.en || {};
-  const box = $('texts'); box.innerHTML = '';
-  TEXT_FIELDS.forEach(({k, l}) => {
-    const item = el('div', {class:'item'});
-    const row = el('div', {class:'row'});
-    row.appendChild(field(l + ' (فارسی)', data.texts.fa[k], e => data.texts.fa[k] = e.target.value, 'textarea'));
-    row.appendChild(field(l + ' (انگلیسی)', data.texts.en[k], e => data.texts.en[k] = e.target.value, 'textarea'));
-    item.appendChild(row);
-    box.appendChild(item);
-  });
-  stagger(box);
+  for (const g of TEXT_FIELDS) {
+    const card = el('div', {class:'txt-group'});
+    card.appendChild(el('h3', {}, [document.createTextNode(g.g)]));
+    for (const {k, l} of g.items) {
+      const row = el('div', {class:'row'});
+      row.appendChild(field(l + ' (فارسی)', data.texts.fa[k], e => data.texts.fa[k] = e.target.value, 'textarea'));
+      row.appendChild(field(l + ' (انگلیسی)', data.texts.en[k], e => data.texts.en[k] = e.target.value, 'textarea'));
+      card.appendChild(row);
+    }
+    view.appendChild(card);
+  }
 }
 
-function blankTr(fa = '', en = '') { return {fa, en}; }
-function addWork() {
-  hideEmpty();
-  data.works.push({
-    id: 'work-' + Date.now(),
-    title: blankTr('نمونه‌کار جدید', 'New work'),
-    category: 'Instagram',
-    desc: blankTr('توضیح کوتاه…', 'Short description…'),
-    detail: blankTr('توضیح کامل…', 'Full description…'),
-    tools: ['Premiere Pro'],
-    role: blankTr('تدوینگر', 'Editor'),
-    url: null, thumbUrl: null, videoUrl: null,
-    icon: 'play_circle',
-    gradient: ['#e8552e', '#7a2d8f'],
-    duration: '0:30',
-  });
-  renderAll(); $('sec-works').classList.add('open');
-  toast('نمونه‌کار اضافه شد — کاور و ویدیو را همین‌جا آپلود کن', '');
-}
-function addSkill() { hideEmpty(); data.skills.push({name: blankTr('مهارت جدید', 'New skill'), value: 70}); renderAll(); $('sec-skills').classList.add('open'); }
-function addCollab() { hideEmpty(); data.collabs.push({name: blankTr('همکاری جدید', 'New collab'), desc: blankTr('توضیح…', 'Description…'), period: null}); renderAll(); $('sec-collabs').classList.add('open'); }
-function addService() { hideEmpty(); data.services.push({title: blankTr('خدمت جدید', 'New service'), desc: blankTr('توضیح…', 'Description…'), icon: 'movie'}); renderAll(); $('sec-services').classList.add('open'); }
-function addContact() { hideEmpty(); data.contacts.push({type: 'telegram', label: 'Telegram', value: '@', url: ''}); renderAll(); $('sec-contacts').classList.add('open'); }
+/* ---------------- settings ---------------- */
+function renderSettings(view) {
+  const card = el('div', {class:'card'});
+  card.appendChild(el('h3', {}, [document.createTextNode('اتصال به گیت‌هاب')]));
+  card.appendChild(field('ریپو (نام‌کاربری/ریپو)', owner + '/' + repo, e => {}, 'input')).querySelector('input').id = 'setRepo';
+  const tokField = field('توکن گیت‌هاب (ghp_...) — فقط یک بار وارد کن، در مرورگر ذخیره می‌شود', localStorage.getItem('hojat-token') || '', e => {}, 'input');
+  tokField.querySelector('input').type = 'password';
+  tokField.querySelector('input').id = 'setTok';
+  card.appendChild(tokField);
+  const tb = el('div', {class:'toolbar', style:'margin-bottom:0'});
+  tb.appendChild(el('button', {class:'b-primary', onclick:() => { saveSettingsFromInputs(); toast('تنظیمات ذخیره شد ✓', 'ok'); loadFromGithub(); }}, [document.createTextNode('ذخیره و اتصال')]));
+  tb.appendChild(el('button', {class:'b-ghost', onclick:() => loadFromGithub()}, [document.createTextNode('⬇️ بارگذاری محتوا')]));
+  card.appendChild(tb);
+  view.appendChild(card);
 
-loadSettings();
-$('repo').addEventListener('change', saveSettings);
-$('tok').addEventListener('change', saveSettings);
-if (localStorage.getItem('hojat-token')) loadFromGithub();
+  const help = el('div', {class:'card'});
+  help.appendChild(el('h3', {}, [document.createTextNode('ساخت توکن جدید')]));
+  help.appendChild(el('div', {style:'font-size:12.5px;color:var(--muted);line-height:2'}, [
+    document.createTextNode('گیت‌هاب ← Settings ← Developer settings ← Personal access tokens ← Tokens (classic) ← Generate new token ← نام: hojat-panel ← فقط تیک repo ← Generate. توکن را همین‌جا وارد کن.'),
+  ]));
+  view.appendChild(help);
+}
+
+/* ---------------- modal ---------------- */
+function openModal(title, bodyNode, { onSave, onCancel }) {
+  const root = $('modalRoot');
+  root.innerHTML = '';
+  const overlay = el('div', {class:'modal-overlay'});
+  const modal = el('div', {class:'modal'});
+  const head = el('div', {class:'modal-head'}, [
+    el('h3', {}, [document.createTextNode(title)]),
+    el('button', {class:'b-ghost', style:'padding:5px 11px', onclick:close}, [document.createTextNode('✕')]),
+  ]);
+  const body = el('div', {class:'modal-body'});
+  body.appendChild(bodyNode);
+  const foot = el('div', {class:'modal-foot'}, [
+    el('button', {class:'b-primary', onclick: async () => {
+      try { await onSave(); close(); } catch (e) { toast('خطا: ' + e.message, 'err'); }
+    }}, [document.createTextNode('✓ تایید و ذخیره')]),
+    el('button', {class:'b-ghost', onclick:() => { onCancel && onCancel(); close(); }}, [document.createTextNode('انصراف')]),
+  ]);
+  modal.appendChild(head); modal.appendChild(body); modal.appendChild(foot);
+  overlay.appendChild(modal);
+  overlay.addEventListener('click', e => { if (e.target === overlay) { onCancel && onCancel(); close(); } });
+  root.appendChild(overlay);
+
+  function close() { root.innerHTML = ''; }
+}
+
+/* ---------------- boot ---------------- */
+function boot() {
+  renderNav();
+  showView('dashboard');
+  loadSettings();
+  if (localStorage.getItem('hojat-token')) loadFromGithub(true);
+}
+boot();
 </script>
 </body>
 </html>
