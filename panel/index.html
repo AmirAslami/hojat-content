@@ -186,6 +186,13 @@ button:disabled{opacity:.5;cursor:wait}
 .thumb-preview{width:74px;height:48px;border-radius:9px;object-fit:cover;border:1px solid var(--line)}
 .up-note{font-size:10.5px;color:var(--muted);flex-basis:100%}
 
+/* ---------- editor pages ---------- */
+.editor-head{
+  display:flex;align-items:center;gap:14px;background:var(--surface);
+  border:1px solid var(--line);border-radius:var(--radius);padding:13px 16px;margin-bottom:16px;
+  animation:fadeUp .35s ease both;
+}
+
 /* ---------- toast / skeleton ---------- */
 .toast{
   position:fixed;bottom:24px;left:50%;z-index:99;transform:translate(-50%,20px);
@@ -583,7 +590,7 @@ function renderNav() {
       contacts: data.contacts.length,
       texts: Object.keys(data.texts?.fa || {}).length,
     }[v.id];
-    const b = el('button', {class:'nav-item' + (currentView === v.id ? ' active' : ''), onclick:() => showView(v.id)}, [
+    const b = el('button', {class:'nav-item' + ((currentView === v.id || currentView === v.id + 'Edit') ? ' active' : ''), onclick:() => showView(v.id)}, [
       el('span', {class:'ic'}, [document.createTextNode(v.ic)]),
       document.createTextNode(v.t),
       count != null ? el('span', {class:'badge'}, [document.createTextNode(String(count))]) : '',
@@ -591,17 +598,24 @@ function renderNav() {
     nav.appendChild(b);
   }
 }
-function showView(id) {
+function showView(id, titleOverride) {
   currentView = id;
   const v = VIEWS.find(x => x.id === id);
-  $('pageTitle').textContent = v.t;
+  $('pageTitle').textContent = titleOverride || (v ? v.t : id);
   renderNav();
   renderCurrent();
   document.querySelector('.content').scrollTop = 0;
 }
 function renderCurrent() {
-  const f = { dashboard:renderDashboard, works:renderWorks, skills:renderSkills, collabs:renderCollabs, services:renderServices, contacts:renderContacts, texts:renderTexts, settings:renderSettings }[currentView];
+  const f = {
+    dashboard:renderDashboard, works:renderWorks, skills:renderSkills,
+    collabs:renderCollabs, services:renderServices, contacts:renderContacts,
+    texts:renderTexts, settings:renderSettings,
+    worksEdit:renderWorkEditor, collabEdit:renderCollabEditor,
+    serviceEdit:renderServiceEditor, contactEdit:renderContactEditor,
+  }[currentView];
   const view = $('view'); view.innerHTML = '';
+  if (!f) { showView('dashboard'); return; }
   f(view);
   stagger(view);
 }
@@ -628,7 +642,7 @@ function renderDashboard(view) {
   const quick = el('div', {class:'card'});
   quick.appendChild(el('h3', {}, [document.createTextNode('عملیات سریع')]));
   const tb = el('div', {class:'toolbar', style:'margin-bottom:0'});
-  tb.appendChild(el('button', {class:'b-primary', onclick:() => { showView('works'); openWorkModal(null); }}, [document.createTextNode('+ نمونه‌کار جدید')]));
+  tb.appendChild(el('button', {class:'b-primary', onclick:() => openWorkEditor(null)}, [document.createTextNode('+ نمونه‌کار جدید')]));
   tb.appendChild(el('button', {class:'b-ghost', onclick:() => showView('texts')}, [document.createTextNode('📝 ویرایش متن‌ها')]));
   tb.appendChild(el('button', {class:'b-ghost', onclick:() => loadFromGithub()}, [document.createTextNode('⬇️ همگام‌سازی با گیت‌هاب')]));
   quick.appendChild(tb);
@@ -661,7 +675,7 @@ function mediaBadges(w) {
 }
 function renderWorks(view) {
   const tb = el('div', {class:'toolbar'});
-  tb.appendChild(el('button', {class:'b-primary', onclick:() => openWorkModal(null)}, [document.createTextNode('+ افزودن نمونه‌کار')]));
+  tb.appendChild(el('button', {class:'b-primary', onclick:() => openWorkEditor(null)}, [document.createTextNode('+ افزودن نمونه‌کار')]));
   tb.appendChild(el('span', {class:'spacer'}));
   tb.appendChild(el('span', {style:'font-size:12px;color:var(--muted)'}, [document.createTextNode('ویرایش با دکمه ✏️ — کاور و ویدیو داخل مودال آپلود می‌شوند')]));
   view.appendChild(tb);
@@ -686,7 +700,7 @@ function renderWorks(view) {
     badges.appendChild(mediaBadges(w));
     row.appendChild(badges);
     row.appendChild(el('div', {class:'actions'}, [
-      el('button', {class:'b-soft', onclick:() => openWorkModal(w.id)}, [document.createTextNode('✏️ ویرایش')]),
+      el('button', {class:'b-soft', onclick:() => openWorkEditor(w.id)}, [document.createTextNode('✏️ ویرایش')]),
       el('button', {class:'b-danger', onclick:() => { if (confirm(`حذف «${w.title?.fa || ''}»؟`)) { data.works = data.works.filter(x => x.id !== w.id); renderCurrent(); toast('حذف شد — برای اعمال، ذخیره بزن', ''); } }}, [document.createTextNode('حذف')]),
     ]));
     view.appendChild(row);
@@ -698,10 +712,45 @@ function state_of(w) {
   return 'بدون ویدیو';
 }
 
-function openWorkModal(workId) {
-  const isNew = !workId;
-  let w;
-  if (isNew) {
+/* ---------------- full-page editors ---------------- */
+let editCtx = null;
+
+function editorHeader(title, crumb) {
+  const head = el('div', {class:'editor-head'});
+  head.appendChild(el('button', {class:'b-ghost', onclick:() => cancelEdit()}, [document.createTextNode('→ بازگشت')]));
+  const t = el('div', {style:'flex:1'});
+  t.appendChild(el('h2', {style:'font-size:17px;font-weight:800;margin:0'}, [document.createTextNode(title)]));
+  t.appendChild(el('div', {style:'font-size:11px;color:var(--muted)'}, [document.createTextNode(crumb)]));
+  head.appendChild(t);
+  head.appendChild(el('button', {class:'b-ok', onclick:() => saveEdit()}, [document.createTextNode('💾 ذخیره')]));
+  return head;
+}
+function cancelEdit() {
+  if (editCtx) {
+    if (editCtx.backup) {
+      data[editCtx.list][editCtx.idx] = editCtx.backup;
+    } else if (editCtx.isNew) {
+      data[editCtx.list].splice(editCtx.idx, 1);
+    }
+  }
+  const back = editCtx ? editCtx.back : 'dashboard';
+  editCtx = null;
+  showView(back);
+}
+async function saveEdit() {
+  await saveToGithub(true);
+  const back = editCtx ? editCtx.back : 'dashboard';
+  editCtx = null;
+  showView(back);
+  toast('ذخیره شد ✓ اپ حداکثر تا ۳۰ ثانیه بعد به‌روز می‌شود', 'ok');
+}
+
+function openWorkEditor(workId) {
+  let w, isNew = false, idx;
+  if (workId) {
+    idx = data.works.findIndex(x => x.id === workId);
+    w = data.works[idx];
+  } else {
     w = {
       id: 'work-' + Date.now(),
       title: blankTr('نمونه‌کار جدید', 'New work'),
@@ -716,48 +765,57 @@ function openWorkModal(workId) {
       duration: '0:30',
     };
     data.works.push(w);
-  } else {
-    w = JSON.parse(JSON.stringify(data.works.find(x => x.id === workId)));
-    w._origId = workId;
+    idx = data.works.length - 1;
+    isNew = true;
   }
-  const backup = isNew ? null : JSON.parse(JSON.stringify(data.works.find(x => x.id === workId)));
-
-  const body = el('div');
+  editCtx = { list:'works', idx, isNew, backup: isNew ? null : JSON.parse(JSON.stringify(w)), back:'works', id:w.id };
+  showView('worksEdit', isNew ? 'افزودن نمونه‌کار' : 'ویرایش نمونه‌کار');
+}
+function mediaStripEditor(w) {
   const strip = el('div', {class:'media-strip'});
   if (w.thumbUrl) strip.appendChild(el('img', {class:'thumb-preview', src:w.thumbUrl, alt:'کاور'}));
-  strip.appendChild(el('button', {class:'b-soft', onclick:() => pickMedia(w.id, 'thumb', 'image/*')}, [document.createTextNode('🖼 آپلود کاور')]));
+  strip.appendChild(el('button', {class:'b-soft', onclick:() => pickMedia(w.id, 'thumb', 'image/*')}, [document.createTextNode('🖼 آپلود عکس کاور')]));
   strip.appendChild(el('button', {class:'b-soft', onclick:() => pickMedia(w.id, 'video', 'video/*')}, [document.createTextNode('🎥 آپلود ویدیو')]));
-  if (w.thumbUrl) strip.appendChild(el('span', {class:'badge ok'}, [document.createTextNode('✓ کاور')]));
-  if (w.videoUrl) strip.appendChild(el('span', {class:'badge ok'}, [document.createTextNode('✓ ویدیو')]));
+  if (w.thumbUrl) strip.appendChild(el('span', {class:'badge ok'}, [document.createTextNode('✓ کاور آپلود شد')]));
+  if (w.videoUrl) strip.appendChild(el('span', {class:'badge ok'}, [document.createTextNode('✓ ویدیو آپلود شد')]));
   strip.appendChild(el('span', {class:'up-note'}, [document.createTextNode('کاور: عکس • ویدیو: تا ~۹۰MB — ویدیوی بلندتر: لینک یوتیوب / گوگل‌درایو در فیلد لینک')]));
-  body.appendChild(strip);
+  return strip;
+}
+function renderWorkEditor(view) {
+  const w = data.works[editCtx.idx];
+  view.appendChild(editorHeader(
+    editCtx.isNew ? 'افزودن نمونه‌کار' : 'ویرایش نمونه‌کار',
+    'نمونه‌کارها / ' + (w.title?.fa || ''),
+  ));
 
-  body.appendChild(trField('عنوان', w, 'title'));
-  body.appendChild(trField('توضیح کوتاه', w, 'desc'));
-  body.appendChild(trField('توضیح کامل جزئیات', w, 'detail'));
-  body.appendChild(trField('نقش', w, 'role'));
+  const mc = el('div', {class:'card'});
+  mc.appendChild(el('h3', {}, [document.createTextNode('🖼 مدیا — کاور و ویدیو')]));
+  mc.appendChild(mediaStripEditor(w));
+  view.appendChild(mc);
+
+  const ic = el('div', {class:'card'});
+  ic.appendChild(el('h3', {}, [document.createTextNode('📋 اطلاعات نمونه‌کار')]));
+  ic.appendChild(trField('عنوان', w, 'title'));
+  ic.appendChild(trField('توضیح کوتاه', w, 'desc'));
+  ic.appendChild(trField('توضیح کامل صفحه جزئیات', w, 'detail'));
+  ic.appendChild(trField('نقش', w, 'role'));
   const r1 = el('div', {class:'row'});
   r1.appendChild(field('دسته', w.category, e => w.category = e.target.value, 'select', () => CATS.map(c => ({v:c, t:c}))));
-  r1.appendChild(field('آیکون', w.icon, e => w.icon = e.target.value, 'select', () => ICONS.map(ic => ({v:ic, t:ICON_LABELS[ic]}))));
+  r1.appendChild(field('آیکون', w.icon, e => w.icon = e.target.value, 'select', () => ICONS.map(ic2 => ({v:ic2, t:ICON_LABELS[ic2]}))));
   r1.appendChild(field('مدت (مثل 0:40)', w.duration, e => w.duration = e.target.value));
-  body.appendChild(r1);
-  body.appendChild(field('لینک ویدیو (یوتیوب / اینستاگرام / گوگل‌درایو — share)', w.url || '', e => w.url = e.target.value || null));
+  ic.appendChild(r1);
+  ic.appendChild(field('لینک ویدیو (یوتیوب / اینستاگرام / گوگل‌درایو — share)', w.url || '', e => w.url = e.target.value || null));
   const r2 = el('div', {class:'row'});
   r2.appendChild(field('رنگ شروع گرادینت', w.gradient?.[0], e => { w.gradient = w.gradient || []; w.gradient[0] = e.target.value; }));
   r2.appendChild(field('رنگ پایان گرادینت', w.gradient?.[1], e => { w.gradient = w.gradient || []; w.gradient[1] = e.target.value; }));
-  body.appendChild(r2);
-  body.appendChild(field('ابزارها (با کاما)', (w.tools || []).join(', '), e => w.tools = e.target.value.split(',').map(s => s.trim()).filter(Boolean)));
+  ic.appendChild(r2);
+  ic.appendChild(field('ابزارها (با کاما)', (w.tools || []).join(', '), e => w.tools = e.target.value.split(',').map(s => s.trim()).filter(Boolean)));
+  view.appendChild(ic);
 
-  openModal(isNew ? 'افزودن نمونه‌کار' : 'ویرایش نمونه‌کار', body, {
-    onSave: async () => {
-      const idx = data.works.findIndex(x => x.id === (isNew ? w.id : workId));
-      data.works[idx] = w;
-      await saveToGithub(true);
-      renderCurrent();
-      toast('نمونه‌کار ذخیره شد ✓', 'ok');
-    },
-    onCancel: () => { if (backup) { const idx = data.works.findIndex(x => x.id === workId); data.works[idx] = backup; } else data.works = data.works.filter(x => x.id !== w.id); renderCurrent(); },
-  });
+  const foot = el('div', {class:'toolbar'});
+  foot.appendChild(el('button', {class:'b-ok', onclick:() => saveEdit()}, [document.createTextNode('💾 ذخیره و بازگشت')]));
+  foot.appendChild(el('button', {class:'b-ghost', onclick:() => cancelEdit()}, [document.createTextNode('انصراف')]));
+  view.appendChild(foot);
 }
 
 /* ---------------- skills ---------------- */
@@ -796,7 +854,7 @@ function renderCollabs(view) {
   const tb = el('div', {class:'toolbar'});
   tb.appendChild(el('button', {class:'b-primary', onclick:() => {
     data.collabs.push({name: blankTr('همکاری جدید', 'New'), desc: blankTr('توضیح…', '…'), period: null});
-    openCollabModal(data.collabs[data.collabs.length - 1], true);
+    openCollabEditor(data.collabs.length - 1);
   }}, [document.createTextNode('+ افزودن همکاری')]));
   view.appendChild(tb);
   for (const c of data.collabs) {
@@ -806,22 +864,29 @@ function renderCollabs(view) {
     grow.appendChild(el('div', {class:'sub'}, [document.createTextNode((c.desc?.fa || '') + (c.period?.fa ? ' • ' + c.period.fa : ''))]));
     row.appendChild(grow);
     row.appendChild(el('div', {class:'actions'}, [
-      el('button', {class:'b-soft', onclick:() => openCollabModal(c, false)}, [document.createTextNode('✏️')]),
+      el('button', {class:'b-soft', onclick:() => openCollabEditor(data.collabs.indexOf(c))}, [document.createTextNode('✏️')]),
       el('button', {class:'b-danger', onclick:() => { if (confirm('حذف شود؟')) { data.collabs = data.collabs.filter(x => x !== c); renderCurrent(); } }}, [document.createTextNode('حذف')]),
     ]));
     view.appendChild(row);
   }
 }
-function openCollabModal(c, isNew) {
-  const body = el('div');
-  body.appendChild(trField('نام', c, 'name'));
-  body.appendChild(trField('توضیح', c, 'desc'));
-  body.appendChild(trField('بازه زمانی (اختیاری)', c, 'period'));
-  const backup = JSON.parse(JSON.stringify(c));
-  openModal(isNew ? 'افزودن همکاری' : 'ویرایش همکاری', body, {
-    onSave: async () => { await saveToGithub(true); renderCurrent(); toast('ذخیره شد ✓', 'ok'); },
-    onCancel: () => { const i = data.collabs.indexOf(c); if (i >= 0) data.collabs[i] = isNew ? undefined : backup; if (isNew) data.collabs.splice(i, 1); renderCurrent(); },
-  });
+function openCollabEditor(idx) {
+  const c = data.collabs[idx];
+  editCtx = { list:'collabs', idx, isNew:false, backup: JSON.parse(JSON.stringify(c)), back:'collabs' };
+  showView('collabEdit', 'ویرایش همکاری');
+}
+function renderCollabEditor(view) {
+  const c = data.collabs[editCtx.idx];
+  view.appendChild(editorHeader('ویرایش همکاری', 'همکاری‌ها / ' + (c.name?.fa || '')));
+  const card = el('div', {class:'card'});
+  card.appendChild(trField('نام', c, 'name'));
+  card.appendChild(trField('توضیح', c, 'desc'));
+  card.appendChild(trField('بازه زمانی (اختیاری)', c, 'period'));
+  view.appendChild(card);
+  const foot = el('div', {class:'toolbar'});
+  foot.appendChild(el('button', {class:'b-ok', onclick:() => saveEdit()}, [document.createTextNode('💾 ذخیره و بازگشت')]));
+  foot.appendChild(el('button', {class:'b-ghost', onclick:() => cancelEdit()}, [document.createTextNode('انصراف')]));
+  view.appendChild(foot);
 }
 
 /* ---------------- services ---------------- */
@@ -829,7 +894,7 @@ function renderServices(view) {
   const tb = el('div', {class:'toolbar'});
   tb.appendChild(el('button', {class:'b-primary', onclick:() => {
     data.services.push({title: blankTr('خدمت جدید', 'New'), desc: blankTr('توضیح…', '…'), icon: 'movie'});
-    renderCurrent();
+    openServiceEditor(data.services.length - 1);
   }}, [document.createTextNode('+ افزودن خدمت')]));
   view.appendChild(tb);
   for (const s of data.services) {
@@ -840,17 +905,7 @@ function renderServices(view) {
     grow.appendChild(el('div', {class:'sub'}, [document.createTextNode(s.desc?.fa || '')]));
     row.appendChild(grow);
     row.appendChild(el('div', {class:'actions'}, [
-      el('button', {class:'b-soft', onclick:() => {
-        const body = el('div');
-        body.appendChild(trField('عنوان', s, 'title'));
-        body.appendChild(trField('توضیح', s, 'desc'));
-        body.appendChild(field('آیکون', s.icon, e => s.icon = e.target.value, 'select', () => ICONS.map(ic => ({v:ic, t:ICON_LABELS[ic]}))));
-        const backup = JSON.parse(JSON.stringify(s));
-        openModal('ویرایش خدمت', body, {
-          onSave: async () => { await saveToGithub(true); renderCurrent(); toast('ذخیره شد ✓', 'ok'); },
-          onCancel: () => { const i = data.services.indexOf(s); data.services[i] = backup; renderCurrent(); },
-        });
-      }}, [document.createTextNode('✏️')]),
+      el('button', {class:'b-soft', onclick:() => openServiceEditor(data.services.indexOf(s))}, [document.createTextNode('✏️')]),
       el('button', {class:'b-danger', onclick:() => { if (confirm('حذف شود؟')) { data.services = data.services.filter(x => x !== s); renderCurrent(); } }}, [document.createTextNode('حذف')]),
     ]));
     view.appendChild(row);
@@ -862,7 +917,7 @@ function renderContacts(view) {
   const tb = el('div', {class:'toolbar'});
   tb.appendChild(el('button', {class:'b-primary', onclick:() => {
     data.contacts.push({type: 'phone', label: 'شماره تماس', value: '', url: ''});
-    renderCurrent();
+    openContactEditor(data.contacts.length - 1);
   }}, [document.createTextNode('+ افزودن راه ارتباطی')]));
   view.appendChild(tb);
   for (const c of data.contacts) {
@@ -873,24 +928,52 @@ function renderContacts(view) {
     if (c.url) grow.appendChild(el('div', {class:'sub'}, [document.createTextNode(c.url)]));
     row.appendChild(grow);
     row.appendChild(el('div', {class:'actions'}, [
-      el('button', {class:'b-soft', onclick:() => {
-        const body = el('div');
-        body.appendChild(field('نوع', c.type, e => { c.type = e.target.value; c.label = CONTACT_LABELS[e.target.value] || e.target.value; renderContacts(); }, 'select', () => CONTACT_TYPES.map(t => ({v:t, t:CONTACT_LABELS[t]}))));
-        body.appendChild(field('مقدار', c.value, e => {
-          c.value = e.target.value;
-          if (c.type === 'phone') c.url = 'tel:' + c.value.replace(/[^\d+]/g, '');
-        }));
-        body.appendChild(field('لینک کامل', c.url, e => c.url = e.target.value));
-        const backup = JSON.parse(JSON.stringify(c));
-        openModal('ویرایش راه ارتباطی', body, {
-          onSave: async () => { await saveToGithub(true); renderCurrent(); toast('ذخیره شد ✓', 'ok'); },
-          onCancel: () => { const i = data.contacts.indexOf(c); data.contacts[i] = backup; renderCurrent(); },
-        });
-      }}, [document.createTextNode('✏️')]),
+      el('button', {class:'b-soft', onclick:() => openContactEditor(data.contacts.indexOf(c))}, [document.createTextNode('✏️')]),
       el('button', {class:'b-danger', onclick:() => { if (confirm('حذف شود؟')) { data.contacts = data.contacts.filter(x => x !== c); renderCurrent(); } }}, [document.createTextNode('حذف')]),
     ]));
     view.appendChild(row);
   }
+}
+
+function openServiceEditor(idx) {
+  const s = data.services[idx];
+  editCtx = { list:'services', idx, isNew:false, backup: JSON.parse(JSON.stringify(s)), back:'services' };
+  showView('serviceEdit', 'ویرایش خدمت');
+}
+function renderServiceEditor(view) {
+  const s = data.services[editCtx.idx];
+  view.appendChild(editorHeader('ویرایش خدمت', 'خدمات / ' + (s.title?.fa || '')));
+  const card = el('div', {class:'card'});
+  card.appendChild(trField('عنوان', s, 'title'));
+  card.appendChild(trField('توضیح', s, 'desc'));
+  card.appendChild(field('آیکون', s.icon, e => s.icon = e.target.value, 'select', () => ICONS.map(ic => ({v:ic, t:ICON_LABELS[ic]}))));
+  view.appendChild(card);
+  const foot = el('div', {class:'toolbar'});
+  foot.appendChild(el('button', {class:'b-ok', onclick:() => saveEdit()}, [document.createTextNode('💾 ذخیره و بازگشت')]));
+  foot.appendChild(el('button', {class:'b-ghost', onclick:() => cancelEdit()}, [document.createTextNode('انصراف')]));
+  view.appendChild(foot);
+}
+
+function openContactEditor(idx) {
+  const c = data.contacts[idx];
+  editCtx = { list:'contacts', idx, isNew:false, backup: JSON.parse(JSON.stringify(c)), back:'contacts' };
+  showView('contactEdit', 'ویرایش راه ارتباطی');
+}
+function renderContactEditor(view) {
+  const c = data.contacts[editCtx.idx];
+  view.appendChild(editorHeader('ویرایش راه ارتباطی', 'راه‌های ارتباط / ' + (CONTACT_LABELS[c.type] || c.type)));
+  const card = el('div', {class:'card'});
+  card.appendChild(field('نوع', c.type, e => { c.type = e.target.value; c.label = CONTACT_LABELS[e.target.value] || e.target.value; }, 'select', () => CONTACT_TYPES.map(t => ({v:t, t:CONTACT_LABELS[t]}))));
+  card.appendChild(field('مقدار', c.value, e => {
+    c.value = e.target.value;
+    if (c.type === 'phone') c.url = 'tel:' + c.value.replace(/[^\d+]/g, '');
+  }));
+  card.appendChild(field('لینک کامل', c.url, e => c.url = e.target.value));
+  view.appendChild(card);
+  const foot = el('div', {class:'toolbar'});
+  foot.appendChild(el('button', {class:'b-ok', onclick:() => saveEdit()}, [document.createTextNode('💾 ذخیره و بازگشت')]));
+  foot.appendChild(el('button', {class:'b-ghost', onclick:() => cancelEdit()}, [document.createTextNode('انصراف')]));
+  view.appendChild(foot);
 }
 
 /* ---------------- texts ---------------- */
