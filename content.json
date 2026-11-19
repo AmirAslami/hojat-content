@@ -31,6 +31,38 @@
         "#7a2d8f"
       ],
       "duration": "0:30"
+    },
+    {
+      "id": "work-1795050520448",
+      "title": {
+        "fa": "نمونه‌کار جدید",
+        "en": "New work"
+      },
+      "category": "Instagram",
+      "desc": {
+        "fa": "توضیح کوتاه…",
+        "en": "Short…"
+      },
+      "detail": {
+        "fa": "توضیح کامل…",
+        "en": "Full…"
+      },
+      "tools": [
+        "Premiere Pro"
+      ],
+      "role": {
+        "fa": "تدوینگر",
+        "en": "Editor"
+      },
+      "url": null,
+      "thumbUrl": null,
+      "videoUrl": null,
+      "icon": "play_circle",
+      "gradient": [
+        "#e8552e",
+        "#7a2d8f"
+      ],
+      "duration": "0:30"
     }
   ],
   "skills": [
